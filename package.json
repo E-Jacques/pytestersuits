@@ -10,14 +10,14 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:pytestersuits.helloWorld"
+        "onCommand:pytestersuits.addTestToFile"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "pytestersuits.helloWorld",
-				"title": "Hello World"
+				"command": "pytestersuits.addTestToFile",
+				"title": "Add Test to File"
 			}
 		]
 	},
@@ -27,7 +27,8 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"clear": "rm -rf ./out"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.63.0",

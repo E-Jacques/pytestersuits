@@ -15,6 +15,10 @@ export class Test {
         this.file = file;
     }
 
+    public getFile(): string {
+        return this.file;
+    }
+
     public setName(name: string) {
         this.name = name;
     }
@@ -22,7 +26,7 @@ export class Test {
     public appendTestToFile() {
         let testString = "";
         if (this.todo) { testString += "@pytest.mark.skip(reason=\"generated automaticly\")\n"; }
-        testString = `def test_${this.name}:\n\tpass\n\n`;
+        testString += `def test_${this.name}:\n\tpass\n\n`;
         
         appendFile(this.file, testString, err => {
             if (err) { console.error(err); }

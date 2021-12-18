@@ -19,7 +19,7 @@ suite("Testing Test class", () => {
         readFile(filename, "utf8",(err, data) => {
             if (err) { console.error(err); }
 
-            assert.strictEqual(data, `def test_${testName}:\n\tpass\n\n`);
+            assert.strictEqual(data, `@pytest.mark.skip(reason="generated automaticly")\ndef test_${testName}:\n\tpass\n\n`);
         });
 
         unlink(filename, err => {
@@ -44,7 +44,7 @@ suite("Testing Test class", () => {
 
         readFile(filename, "utf8", (err, data) => {
             if (err) { console.error(err); }
-            assert.strictEqual(data, `def test_${testName1}:\n\tpass\n\ndef test_${testName2}:\n\tpass\n\n`);
+            assert.strictEqual(data, `@pytest.mark.skip(reason="generated automaticly")\ndef test_${testName1}:\n\tpass\n\n@pytest.mark.skip(reason="generated automaticly")\ndef test_${testName2}:\n\tpass\n\n`);
         });
 
         unlink(filename, err => {

@@ -27,10 +27,38 @@ function createTestDir(dirName: string, filenames: string[], layerFilenames: str
 	}
 }
 
+suite("getLineCount", () => {
+	test("Empty string", () => {
+		assert.strictEqual(1, func.getLineCount(""));
+	});
+
+	test("Not line return", () => {
+		assert.strictEqual(1, func.getLineCount("Ceci est un premier test !"));
+	});
+
+	test("Some lines to be count", () => {
+		assert.strictEqual(2, func.getLineCount(`Ceci est
+		un test !`));
+		assert.strictEqual(5, func.getLineCount(`Ceci est
+		un simple
+		test
+		pour
+		tester un test !`));
+	});
+});
+
 suite("camelCaseToPythonString", () => {
 	test("Don't change python string", () => {
 		assert.strictEqual(func.camelCaseToPythonString("in_python_case"), "in_python_case");
 		assert.strictEqual(func.camelCaseToPythonString("test"), "test");
+	});
+
+	test("Handle space and upperCase", () => {
+		assert.strictEqual(func.camelCaseToPythonString("in space case"), "in_space_case");
+		assert.strictEqual(func.camelCaseToPythonString("in space Case"), "in_space_case");
+		assert.strictEqual(func.camelCaseToPythonString("in Space case"), "in_space_case");
+		assert.strictEqual(func.camelCaseToPythonString("in Space Case"), "in_space_case");
+		assert.strictEqual(func.camelCaseToPythonString("test this here and Now"), "test_this_here_and_now");
 	});
 
 	test("transform camelCase", () => {

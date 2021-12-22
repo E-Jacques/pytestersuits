@@ -37,7 +37,7 @@ export function isExtension(file: string, ext: string): boolean {
     return true;
 }
 
-export function camelCaseToPythonString (toTransform: string): string {
+export function camelCaseToPythonString(toTransform: string): string {
     const uppercase = "AZERTYUIOPQSDFGHJKLMWXCVBN";
     let res = "";
 

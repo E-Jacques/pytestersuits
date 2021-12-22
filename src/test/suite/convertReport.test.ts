@@ -478,6 +478,10 @@ suite("Change tested and untested lines index", () => {
         assert(!linesReport.notTested.includes(54));
     });
 
+    test("Handle impossible line change", () => {
+        assert.throws(() => coverReportFunc.moveLinesPercentages(data, 2, 1), Error, '"end line couldn\'t be inferior to start line."');
+    });
+
     test("Changing middle line should move only some of the lines", () => {
         let linesReport = coverReportFunc.moveLinesPercentages(data, 20, 21);
         assert(!linesReport.notTested.includes(20));

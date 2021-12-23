@@ -15,7 +15,10 @@ export class CoverageReport extends vscode.TreeItem {
     super(filepath, collapsibleState);
     this.tooltip = `Go to ${this.filepath}:${this.line}`;
     this.description = this.state === null ? `${this.line}%` : `l:${this.line}`;
-    let imagePath = join(__filename, "..", "..", "..", "rsc", "icons", `coverage_report_${this.state}.svg`);
+
+    
+    let imagePath = join(__filename, "..", "..", "..", "..", "rsc", "icons", `coverage_report_${this.state}.svg`);
+    console.log(imagePath);
     this.iconPath = { light: imagePath, dark: imagePath };
 
     if (this.state === null) {

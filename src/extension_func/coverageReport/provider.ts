@@ -92,7 +92,6 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
 
 
         let newLinesReport = coverageReportFunc.moveLinesPercentages(linesReport, start, end);
-        console.log(newLinesReport);
 
         this.setNewLinesReport(filename, newLinesReport);
         this._onDidChangeTreeData.fire();

@@ -1,4 +1,5 @@
-import { appendFile, readFileSync, writeFileSync } from "fs";
+import { accessSync, appendFile, mkdirSync, readFileSync, writeFileSync } from "fs";
+import path = require("path");
 
 export class Test {
     private todo: boolean;
@@ -25,13 +26,23 @@ export class Test {
     }
 
     public importTestLibraryIfNeeded() {
+        try {
+            accessSync(this.file);
+        } catch (err) {
+            writeFileSync(this.file, "import pytest\n", "utf-8");
+            return;
+        }
+        
         if (!this.fileContainsImport()) {
             let data = readFileSync(this.file, "utf-8");
             writeFileSync(this.file, "import pytest\n" + data, "utf-8");
         }
     }
 
-    public appendTestToFile() {
+    public appendTestToFile() {               
+        mkdirSync(path.parse(this.file).dir, {
+            recursive: true
+        });
         this.importTestLibraryIfNeeded();
         
         let testString = "";

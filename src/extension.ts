@@ -10,8 +10,10 @@ import { handleTextDocumentChangeEvent, handleTextDocumentSaveEvent } from './ex
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is execute
 export function activate(context: vscode.ExtensionContext) {
+	const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+            ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
 
-	vscode.commands.registerCommand('pytestersuits.addTestToFile', addTestToFile);
+	vscode.commands.registerCommand('pytestersuits.addTestToFile', () => addTestToFile(rootPath));
 	const coverageReportProvider = new CoverageReportProvider(
 		join((vscode.workspace.workspaceFolders || [{ uri: { path: "." } }])[0].uri.path, "htmlcov"));
 	vscode.window.createTreeView("coverReport", {

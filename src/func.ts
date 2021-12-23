@@ -14,7 +14,6 @@ export function isDirectory(filepath: string): boolean {
         return false;
     }
 
-    // console.log(`${filepath}: ${fileStats.isDirectory()}`);
     return fileStats.isDirectory();
 }
 

@@ -18,7 +18,6 @@ export class CoverageReport extends vscode.TreeItem {
 
     
     let imagePath = join(__filename, "..", "..", "..", "..", "rsc", "icons", `coverage_report_${this.state}.svg`);
-    console.log(imagePath);
     this.iconPath = { light: imagePath, dark: imagePath };
     this.contextValue = "lineCoverageReport";
 

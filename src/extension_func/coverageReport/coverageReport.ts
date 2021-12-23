@@ -32,8 +32,23 @@ export class CoverageReport extends vscode.TreeItem {
     return this.state === null;
   }
 
-  public goto () {
-    let uri = vscode.Uri.file(join(this.filepath + ":" + this.line));
-    vscode.window.showTextDocument(uri);
+  public async goto () {
+    const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+	? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+
+    if (rootPath === null) {
+      vscode.window.showErrorMessage(`Couldn't open file ${join(this.filepath)}`);
+      return;
+    }
+
+    let uri = vscode.Uri.file(join(rootPath, this.filepath));
+    await vscode.commands.executeCommand("vscode.open", uri);
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) { return; }
+    const position = editor.selection.active;
+
+    var newPosition = position.with(this.line - 1, 0);
+    var newSelection = new vscode.Selection(newPosition, newPosition);
+    editor.selection = newSelection;
   }
 }

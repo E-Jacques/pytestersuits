@@ -73,19 +73,14 @@ export function extractLinesPercentages(data: string): LinesReport {
 /**
  * Should work with pytest's individal file cover report.
  */
-export function moveLinesPercentages(data: string, changeStartLine: number, changeEndLine: number): LinesReport {
-    let linesReport = extractLinesPercentages(data);
+export function moveLinesPercentages(linesReport: LinesReport, changeStartLine: number, changeEndLine: number): LinesReport {
     let diff = changeEndLine - changeStartLine;
-
-    if (diff < 0) {
-        throw new Error("End line couldn't be inferior to start line.");
-    }
 
     let increment = ((a: number) => a >= changeStartLine ? a + diff : a);
 
-    linesReport.tested = linesReport.tested.map(increment);
-    linesReport.notTested = linesReport.notTested.map(increment);
-    linesReport.notHandled = [...Array(diff).keys()].map(a => a + changeStartLine);
+    linesReport.notHandled = [...Array(diff + 1).keys()].map(a => a + changeStartLine);
+    linesReport.tested = linesReport.tested.map(increment).filter(a => !linesReport.notHandled.includes(a));
+    linesReport.notTested = linesReport.notTested.map(increment).filter(a => !linesReport.notHandled.includes(a));
 
     return linesReport;
 }

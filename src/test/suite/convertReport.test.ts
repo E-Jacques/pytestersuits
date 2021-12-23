@@ -465,11 +465,25 @@ suite("Change tested and untested lines index", () => {
     </body>
     </html>`;
 
+    test("Writing on one line should change arrays", () => {
+        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        assert(linesReport.tested.includes(2));
+        linesReport = coverReportFunc.moveLinesPercentages(linesReport, 2, 2);
+        assert(!linesReport.notTested.includes(2));
+        assert(!linesReport.tested.includes(2));
+        assert(linesReport.notHandled.includes(2));
+
+        assert(linesReport.tested.includes(28));
+        assert(linesReport.notTested.includes(52));
+    });
+
     test("Add at first line should move all lines", () => {
-        let linesReport = coverReportFunc.moveLinesPercentages(data, 1, 2);
+        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        linesReport = coverReportFunc.moveLinesPercentages(linesReport, 1, 2);
         assert(!linesReport.notTested.includes(1));
         assert(!linesReport.tested.includes(1));
         assert(linesReport.notHandled.includes(1));
+        assert(linesReport.notHandled.includes(2));
 
         assert(linesReport.tested.includes(29));
         assert(linesReport.notTested.includes(53));
@@ -479,14 +493,17 @@ suite("Change tested and untested lines index", () => {
     });
 
     test("Handle impossible line change", () => {
-        assert.throws(() => coverReportFunc.moveLinesPercentages(data, 2, 1), Error, '"end line couldn\'t be inferior to start line."');
+        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        linesReport = coverReportFunc.moveLinesPercentages(linesReport, 2, 1);
     });
 
     test("Changing middle line should move only some of the lines", () => {
-        let linesReport = coverReportFunc.moveLinesPercentages(data, 20, 21);
+        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        linesReport = coverReportFunc.moveLinesPercentages(linesReport, 20, 21);
         assert(!linesReport.notTested.includes(20));
         assert(!linesReport.tested.includes(20));
         assert(linesReport.notHandled.includes(20));
+        assert(linesReport.notHandled.includes(21));
 
         assert(linesReport.tested.includes(16));
         assert(!linesReport.tested.includes(15));
@@ -497,13 +514,15 @@ suite("Change tested and untested lines index", () => {
     });
 
     test("Editing multiple lines should move multiple lines", () => {
-        let linesReport = coverReportFunc.moveLinesPercentages(data, 20, 26);
+        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        linesReport = coverReportFunc.moveLinesPercentages(linesReport, 20, 26);
         assert(linesReport.notHandled.includes(20));
         assert(linesReport.notHandled.includes(21));
         assert(linesReport.notHandled.includes(22));
         assert(linesReport.notHandled.includes(23));
         assert(linesReport.notHandled.includes(24));
         assert(linesReport.notHandled.includes(25));
+        assert(linesReport.notHandled.includes(26));
 
         assert(linesReport.tested.includes(16));
         assert(!linesReport.tested.includes(15));

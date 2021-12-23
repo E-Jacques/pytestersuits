@@ -21,7 +21,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         this.buildCoverageReportList();
     }
 
-    public reload () {
+    public reload() {
         this._onDidChangeTreeData.fire();
     }
 
@@ -58,7 +58,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         return Promise.resolve(res);
     }
 
-    public buildCoverageReportList () {
+    public buildCoverageReportList() {
         this.coverageReportList = [];
         let htmlFiles = readdirSync(this.coveragePath).filter(f => isExtension(join(this.coveragePath, f), "html")).filter(f => f !== "index.html");
 
@@ -85,7 +85,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
             ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
         if (rootPath === null) { return; }
-        
+
         let relativeFilename = relative(rootPath, filename);
         let linesReport = this.getLinesReport(relativeFilename);
         if (linesReport === null) { return; }
@@ -93,13 +93,16 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
 
         let newLinesReport = coverageReportFunc.moveLinesPercentages(linesReport, start, end);
         console.log(newLinesReport);
-        
+
         this.setNewLinesReport(filename, newLinesReport);
-        this._onDidChangeTreeData.fire();        
+        this._onDidChangeTreeData.fire();
     }
 
     private getFileReport(coverageReport: coverageReportFunc.FileReport): CoverageReport {
-        return new CoverageReport(coverageReport.filename, coverageReport.percent, null, vscode.TreeItemCollapsibleState.Collapsed);
+        let collapse = vscode.TreeItemCollapsibleState.Collapsed;
+        if (coverageReport.percent === 100) { collapse = vscode.TreeItemCollapsibleState.None; }
+        
+        return new CoverageReport(coverageReport.filename, coverageReport.percent, null, collapse);
     }
 
     private getLinesReport(filename: string): coverageReportFunc.LinesReport | null {

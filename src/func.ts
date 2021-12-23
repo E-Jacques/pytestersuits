@@ -1,5 +1,5 @@
 import { accessSync, lstatSync, readdirSync, Stats } from "fs";
-import { join } from "path";
+import { join, parse, relative } from "path";
 
 export function getLineCount(textToEvaluate: string): number {
     return textToEvaluate.split(/\r\n|\r|\n/).length;

@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import * as coverReportFunc from "../../extension_func/displayCoverReportDetails";
+import * as coverReportFunc from "../../extension_func/coverageReport/func";
 
 suite("Testing cover report data recuperation", () => {
     const data = `<!DOCTYPE html>

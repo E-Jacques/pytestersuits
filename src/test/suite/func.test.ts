@@ -1,7 +1,7 @@
 import * as assert from "assert";
 
-import { after, before } from 'mocha';
-import { mkdir, rmdirSync, writeFile } from 'fs';
+import { before } from 'mocha';
+import { mkdir, writeFile } from 'fs';
 import { join } from 'path';
 import * as func from "../../func";
 
@@ -84,15 +84,11 @@ suite("isExtension", () => {
 });
 
 suite("isDirectory", () => {
-	const testDir = "test_tmp";
+	const testDir = "test_env/test_tmp";
 
 	before(() => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "wrong", "a.py"];
 		createTestDir(testDir, filenames, filenames);
-	});
-
-	after(() => {
-		rmdirSync(testDir, { recursive: true });
 	});
 
 	test("Not a directory", () => {
@@ -108,15 +104,11 @@ suite("isDirectory", () => {
 });
 
 suite("getFileWithExtension", () => {
-	const testDir = "test_tmp";
+	const testDir = "test_env/test_tmp";
 
 	before(() => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
 		createTestDir(testDir, filenames, filenames);
-	});
-
-	after(() => {
-		rmdirSync(testDir, { recursive: true });
 	});
 
 	test("Throw Error on dir not found", () => {

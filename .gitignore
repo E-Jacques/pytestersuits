@@ -4,3 +4,5 @@ node_modules
 .vscode-test/
 *.vsix
 test_file
+test_env
+test_env/**

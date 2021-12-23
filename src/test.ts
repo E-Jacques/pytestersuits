@@ -1,13 +1,9 @@
-import { appendFile } from "fs";
+import { appendFile, readFileSync, writeFileSync } from "fs";
 
 export class Test {
-    private name: string;
-    private file: string;
     private todo: boolean;
 
-    constructor(name: string, file: string) {
-        this.name = name;
-        this.file = file;
+    constructor(private name: string, private file: string) {
         this.todo = true;
     }
 
@@ -23,11 +19,25 @@ export class Test {
         this.name = name;
     }
 
+    public fileContainsImport (): boolean {
+        let data = readFileSync(this.file, "utf-8");        
+        return data.includes("import pytest");
+    }
+
+    public importTestLibraryIfNeeded() {
+        if (!this.fileContainsImport()) {
+            let data = readFileSync(this.file, "utf-8");
+            writeFileSync(this.file, "import pytest\n" + data, "utf-8");
+        }
+    }
+
     public appendTestToFile() {
-        let testString = "";
-        if (this.todo) { testString += "@pytest.mark.skip(reason=\"generated automaticly\")\n"; }
-        testString += `def test_${this.name}:\n\tpass\n\n`;
+        this.importTestLibraryIfNeeded();
         
+        let testString = "";
+        if (this.todo) { testString += "\n@pytest.mark.skip(reason=\"generated automaticly\")\n"; }
+        testString += `def test_${this.name}():\n\tpass\n`;
+
         appendFile(this.file, testString, err => {
             if (err) { console.error(err); }
         });

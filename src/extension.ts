@@ -3,6 +3,7 @@
 import { join } from 'path';
 import * as vscode from 'vscode';
 import { addTestToFile } from './extension_func/addTestToFile';
+import { CoverageReport } from './extension_func/coverageReport/coverageReport';
 import { CoverageReportProvider } from './extension_func/coverageReport/provider';
 
 // this method is called when your extension is activated
@@ -14,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 		treeDataProvider: new CoverageReportProvider(
 			join((vscode.workspace.workspaceFolders || [{ uri: { path: "." } }])[0].uri.path, "htmlcov"))
 	});
-
+	vscode.commands.registerCommand("coverReport.goto", (report: CoverageReport) => { console.log("test"); report.goto(); });
 
 	context.subscriptions.push(addTestToFileDisposable, coverageReportDisposable);
 }

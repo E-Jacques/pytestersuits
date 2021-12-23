@@ -19,22 +19,39 @@
       {
         "command": "pytestersuits.addTestToFile",
         "title": "Add Test to File"
+      },
+      {
+        "command": "coverReport.goto",
+        "title": "Go to",
+        "icon": {
+          "dark": "rsc/icons/coverage_report_goto/dark.svg",
+          "light": "rsc/icons/coverage_report_goto/light.svg"
+        }
       }
     ],
+    "viewsContainers": {
+      "activityBar": [
+        {
+          "id": "coverage-report",
+          "title": "Coverage Report",
+          "icon": "rsc/activityBar/coverage_report.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "coverage-report": [
         {
           "id": "coverReport",
           "name": "Coverage Report"
         }
       ]
     },
-    "viewsContainers": {
-      "panel": [
+    "menus": {
+      "view/item/context": [
         {
-          "id": "coverage-report",
-          "title": "Coverage Report",
-          "icon": "rsc/activityBar/coverage_report.svg"
+          "command": "coverReport.goto",
+          "when": "view == coverReport && viewItem == lineCoverageReport",
+          "group": "inline"
         }
       ]
     }

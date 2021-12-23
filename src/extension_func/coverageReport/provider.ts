@@ -5,9 +5,18 @@ import { accessSync, readdirSync, readFileSync } from "fs";
 import { isExtension } from "../../func";
 import { join } from "path";
 
+type FullCoverageReport = {
+    fileReport: coverageReportFunc.FileReport,
+    linesReport: coverageReportFunc.LinesReport
+};
+
 export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageReport> {
 
-    constructor(private coveragePath: string) { }
+    private coverageReportList: FullCoverageReport[];
+
+    constructor(private coveragePath: string) { 
+        this.coverageReportList = [];
+    }
 
     getTreeItem(element: CoverageReport): vscode.TreeItem {
         return element;
@@ -23,10 +32,21 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         }
 
         if (element) {
-            return Promise.resolve([]);
+            if (!element.isFileReport()) {
+                return Promise.resolve([]);
+            }
+
+            let filename = element.filepath;
+            let linesReport = this.getLinesReport(filename);
+            if (linesReport === null) { return Promise.resolve([]); }
+
+            let notTested = this.getNotTestedFiles(filename, linesReport);
+            let notHandled = this.getNotHandledFiles(filename, linesReport);
+            
+            let res = notTested.concat(notHandled);
+            return Promise.resolve(res);
         }
 
-        let coverageReportList: CoverageReport[] = [];
         let htmlFiles = readdirSync(this.coveragePath).filter(f => isExtension(join(this.coveragePath, f), "html")).filter(f => f !== "index.html");
 
         for (let file of htmlFiles) {
@@ -36,15 +56,33 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
             if (originalFilenameMatch === null) { throw new Error("Bad format for coverage report file."); }
             let originalFilename = originalFilenameMatch[1].replace(/\s+/g, '').split(":")[0].substring(11);
 
-            let coverageReport = coverageReportFunc.extractLinesPercentages(data);
-
-            let notTested = this.getNotTestedFiles(originalFilename, coverageReport);
-            let notHandled = this.getNotHandledFiles(originalFilename, coverageReport);
-
-            coverageReportList = coverageReportList.concat(notTested).concat(notHandled);
+            let fileReport: coverageReportFunc.FileReport = {
+               filename: originalFilename,
+               percent: Number.parseInt(originalFilenameMatch[1].replace(/\s+/g, '').split(":")[1])
+            };
+            let linesReport: coverageReportFunc.LinesReport = coverageReportFunc.extractLinesPercentages(data);
+            this.coverageReportList.push({
+                fileReport,
+                linesReport
+            });
         }
 
-        return Promise.resolve(coverageReportList);
+        let res = this.coverageReportList.map(r => r.fileReport).map(r => this.getFileReport(r));
+        return Promise.resolve(res);
+    }
+
+    private getFileReport (coverageReport: coverageReportFunc.FileReport): CoverageReport {
+        return new CoverageReport(coverageReport.filename, coverageReport.percent, null, vscode.TreeItemCollapsibleState.Collapsed);
+    }
+
+    private getLinesReport (filename: string): coverageReportFunc.LinesReport | null {
+        let filtered = this.coverageReportList.filter(r => r.fileReport.filename === filename);
+
+        if (filtered.length === 0) {
+            return null;
+        }
+
+        return filtered[0].linesReport;
     }
 
     private getNotTestedFiles(orignalFilename: string, coverageReport: coverageReportFunc.LinesReport): CoverageReport[] {

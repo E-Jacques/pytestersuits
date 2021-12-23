@@ -1,6 +1,6 @@
 import { parse } from "node-html-parser";
 
-export type FilesReport = {
+export type FileReport = {
     filename: string,
     percent: number
 };
@@ -14,8 +14,8 @@ export type LinesReport = {
 /**
  * Should work with pytest's index.html cover report file.
  */
-export function extractFilesPercentages(data: string): FilesReport[] {
-    let filesReport: FilesReport[] = [];
+export function extractFilesPercentages(data: string): FileReport[] {
+    let filesReport: FileReport[] = [];
     let html = parse(data);
     let fileList = html.querySelectorAll("tr.file");
 

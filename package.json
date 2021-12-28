@@ -2,7 +2,7 @@
   "name": "pytestersuits",
   "displayName": "PyTesterSuits",
   "description": "VSCode extension to simplify python's script test. The main goal is to avoid writing boilerplate code for tests.",
-  "version": "0.0.1",
+  "version": "1.2.2",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -81,5 +81,10 @@
   },
   "dependencies": {
     "node-html-parser": "^5.1.0"
-  }
+  },
+  "repository": {
+    "url": "https://github.com/E-Jacques/pytestersuits.git",
+    "type": "github"
+  },
+  "icon": "rsc/icon.png"
 }

@@ -74,6 +74,8 @@ import trucmuch
 
 suite("Testing Test.fileContainsImport", () => {
     test("Should detect 'import pytest'", () => {
+        console.log(process.cwd());
+        
         const filename = "test_env/test_fourth.py";
         const testName = "first";
 

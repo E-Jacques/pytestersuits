@@ -6,3 +6,4 @@ node_modules
 test_file
 test_env
 test_env/**
+rsc/icon.svg

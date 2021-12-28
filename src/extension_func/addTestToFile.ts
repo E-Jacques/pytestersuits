@@ -23,9 +23,12 @@ export function addTestToFile(rootPath: string | null) {
                 if (quickPick.value === "") {
                     quickPick.items = pyFilesInDir.map(s => ({ label: s, detail: s + " file" }));
                 } else {
+                    let camelCaseValue = func.camelCaseToPythonString(quickPick.value);
+                    let fileWithExt = func.addExtensionToEnd(camelCaseValue, "py");
+                    
                     quickPick.items = [{
                         label: quickPick.value,
-                        detail: `Create file '${func.camelCaseToPythonString(quickPick.value)}.py'`
+                        detail: `Create file '${fileWithExt}'`
                     }, ...pyFilesInDir.map(s => ({ label: s, details: s + " file" }))];
                 }
             }
@@ -35,7 +38,8 @@ export function addTestToFile(rootPath: string | null) {
             let { label } = quickPick.activeItems[0];
             
             if (path.parse(label).ext !== "py") {
-                label = path.join(path.parse(label).dir, path.parse(label).name + ".py");
+                let labelName = path.parse(label).name;
+                label = path.join(path.parse(label).dir, func.addExtensionToEnd(labelName, "py"));
             }
             resolve(label);
             quickPick.hide();

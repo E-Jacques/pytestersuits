@@ -167,6 +167,7 @@ suite("Testing addExtensionToEnd", () => {
 
 	test("Should add the ext at the end of the filename even if a part is already present", () => {
 		assert.strictEqual(func.addExtensionToEnd("a.p", "py"), "a.py");
+		assert.strictEqual(func.addExtensionToEnd("test.p", "py"), "test.py");
 		assert.strictEqual(func.addExtensionToEnd("a.test", "js"), "a.test.js");
 		assert.strictEqual(func.addExtensionToEnd("a", "test.js"), "a.test.js");
 		assert.strictEqual(func.addExtensionToEnd("a.", "test.js"), "a.test.js");
@@ -174,6 +175,7 @@ suite("Testing addExtensionToEnd", () => {
 
 	test("Should stay the same when ext name is already present", () => {
 		assert.strictEqual(func.addExtensionToEnd("a.py", "py"), "a.py");
+		assert.strictEqual(func.addExtensionToEnd("test.py", "py"), "test.py");
 		assert.strictEqual(func.addExtensionToEnd("b.test.js", "test.js"), "b.test.js");
 	});
 });

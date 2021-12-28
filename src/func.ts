@@ -10,14 +10,18 @@ export function addExtensionToEnd (filename: string, ext: string): string {
     let extDotCount = ext.split(".").length - 1;
     let filenameDotCount = filename.split(".").length - 1;
 
-    let idx = ext.length - 1;
+    let idx = filename.length - 1;
     for (let _ = 0; _ < Math.min(extDotCount, filenameDotCount); _++ ) {
         idx = filename.lastIndexOf(".", idx - 1);
-    }    
+    }        
 
-    if (idx !== -1 && ext.startsWith(filename.substring(idx))) {
+    if (idx >= 0 && ext.startsWith(filename.substring(idx))) {
         filename = filename.substring(0, idx);
     }
+
+    if (filename[filename.length - 1] === ".") {
+        filename = filename.substring(0, filename.length - 1);
+    }    
 
     return filename + ext;
 }

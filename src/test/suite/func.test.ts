@@ -1,29 +1,49 @@
 import * as assert from "assert";
 
 import { before } from 'mocha';
-import { mkdir, writeFile } from 'fs';
+import { access, mkdir, writeFile } from 'fs';
 import { join } from 'path';
 import * as func from "../../func";
 
-function createTestDir(dirName: string, filenames: string[], layerFilenames: string[]) {
-	mkdir(dirName, err => {
-		if (err) { console.error(err); }
-	});
-
-	for (let filename of filenames) {
-		writeFile(join(dirName, filename), "", err => {
+function createFile (filename: string) {
+	try {
+		access(filename, err => {
 			if (err) { console.error(err); }
 		});
 	}
+	catch {
 
-	mkdir(join(dirName, "layer"), err => {
-		if (err) { console.error(err); }
-	});
-
-	for (let filename of layerFilenames) {
-		writeFile(join(dirName, "layer", filename), "", err => {
+		writeFile(filename, "", err => {
 			if (err) { console.error(err); }
 		});
+	}
+}
+
+function createDir (dirpath: string) {
+	try {
+		access(dirpath, err => {
+			if (err) { console.error(err); }
+		});
+	}
+	catch {
+
+		mkdir(dirpath, { recursive: true }, err => {
+			if (err) { console.error(err); }
+		});
+	}
+}
+
+function createTestDir(dirName: string, filenames: string[], layerFilenames: string[]) {
+	createDir(dirName);
+
+	for (let filename of filenames) {
+		createFile(join(dirName, filename));
+	}
+
+	createDir(join(dirName, "layer"));
+
+	for (let filename of layerFilenames) {
+		createFile(join(dirName, "layer", filename));
 	}
 }
 
@@ -135,5 +155,27 @@ suite("getFileWithExtension", () => {
 		assert(filteredArray.includes("layer/test.py"));
 		assert(filteredArray.includes("layer/main.py"));
 		assert(filteredArray.includes("layer/a.py"));
+	});
+});
+
+suite("Testing addExtensionToEnd", () => {
+	test("Should add the ext at the end of filename where there is no extension for the moment", () => {
+		assert.strictEqual(func.addExtensionToEnd("a", "py"), "a.py");
+		assert.strictEqual(func.addExtensionToEnd("b.test", "js"), "b.test.js");
+		assert.strictEqual(func.addExtensionToEnd("b", "test.js"), "b.test.js");
+	});
+
+	test("Should add the ext at the end of the filename even if a part is already present", () => {
+		assert.strictEqual(func.addExtensionToEnd("a.p", "py"), "a.py");
+		assert.strictEqual(func.addExtensionToEnd("test.p", "py"), "test.py");
+		assert.strictEqual(func.addExtensionToEnd("a.test", "js"), "a.test.js");
+		assert.strictEqual(func.addExtensionToEnd("a", "test.js"), "a.test.js");
+		assert.strictEqual(func.addExtensionToEnd("a.", "test.js"), "a.test.js");
+	});
+
+	test("Should stay the same when ext name is already present", () => {
+		assert.strictEqual(func.addExtensionToEnd("a.py", "py"), "a.py");
+		assert.strictEqual(func.addExtensionToEnd("test.py", "py"), "test.py");
+		assert.strictEqual(func.addExtensionToEnd("b.test.js", "test.js"), "b.test.js");
 	});
 });

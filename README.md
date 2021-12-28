@@ -21,9 +21,15 @@ Users appreciate release notes as you update your extension.
 Initial release of `pytestersuits`.
 Adding command to add some tests
 
-### 1.1.0
+### 1.2.0
 
 Fixing some issues on `Add Test to File` and adding a system to automaticlly create file.
 Now, `Add Test to File` also auto import `pytest` (`import pytest`) when the module isn't already imported in python script.
 <br>
 Implmentation of a embeded UI to show you code test coverage with auto update on save.
+
+### 1.2.2
+
+Fixing an issue concerning `Add Test to File`.
+New you can provide any type of name (with or without '.py', even with part of it), it will correctly add the file extension at the end.
+

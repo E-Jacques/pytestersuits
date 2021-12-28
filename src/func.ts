@@ -5,6 +5,27 @@ export function getLineCount(textToEvaluate: string): number {
     return textToEvaluate.split(/\r\n|\r|\n/).length;
 }
 
+export function addExtensionToEnd (filename: string, ext: string): string {
+    if (ext[0] !== ".") { ext = "." + ext; }
+    let extDotCount = ext.split(".").length - 1;
+    let filenameDotCount = filename.split(".").length - 1;
+
+    let idx = filename.length - 1;
+    for (let _ = 0; _ < Math.min(extDotCount, filenameDotCount); _++ ) {
+        idx = filename.lastIndexOf(".", idx - 1);
+    }        
+
+    if (idx >= 0 && ext.startsWith(filename.substring(idx))) {
+        filename = filename.substring(0, idx);
+    }
+
+    if (filename[filename.length - 1] === ".") {
+        filename = filename.substring(0, filename.length - 1);
+    }    
+
+    return filename + ext;
+}
+
 export function isDirectory(filepath: string): boolean {
     let fileStats: Stats;
 

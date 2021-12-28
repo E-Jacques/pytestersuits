@@ -5,11 +5,6 @@ import * as func from '../func';
 import { Test } from '../test';
 import { openDocumentToLine } from '../vscodefunc';
 
-type LabelValuePair = {
-    label: string,
-    value: string
-};
-
 export function addTestToFile(rootPath: string | null) {
     if (!rootPath) {
         vscode.window.showErrorMessage("Can't find root path.");

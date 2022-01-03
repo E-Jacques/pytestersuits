@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { parse } from "path";
 import * as vscode from "vscode";
 import { LanguageInterface } from "./extension_func/languageInterface";
-import FileExtensionHashtable from "./FileExtensionHashtable";
+import { getDefaultLanguage, getLanguageFromExt } from "./FileExtensionHashtable";
 import { getAllFiles, getLineCount, getMostFrequent } from "./func";
 
 export function openDocumentToLine(filepath: string, line: number) {
@@ -33,7 +33,7 @@ export function getCurrentCodeLanguage(): LanguageInterface {
     if (!filename) {
         const rootPath = getRootPath();
         if (rootPath === null) {
-            throw new Error("Can't find root path.");
+            return getDefaultLanguage();
         }
 
         let files: string[] = getAllFiles(rootPath);
@@ -42,11 +42,7 @@ export function getCurrentCodeLanguage(): LanguageInterface {
         ext = parse(filename).ext;
     }
 
-    if (!Object.keys(FileExtensionHashtable).includes(ext)) {
-        throw new Error("Unknown Extension for FileExtensionHashtable.");
-    }
-
-    return FileExtensionHashtable[ext];
+    return getLanguageFromExt(ext);
 }
 
 export function getRootPath(): string | null {

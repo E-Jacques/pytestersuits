@@ -4,33 +4,33 @@ import *  as vscode from "vscode";
 import * as func from '../func';
 import { Test } from '../test';
 import { openDocumentToLine } from '../vscodefunc';
-import { PythonHandler } from "./language/PythonHandler";
+import { LanguageInterface } from "./languageInterface";
 
-export function addTestToFile(rootPath: string | null) {
+export function addTestToFile(rootPath: string | null, languageInterface: LanguageInterface) {
     if (!rootPath) {
         vscode.window.showErrorMessage("Can't find root path.");
         return;
     }
 
-    let pyFilesInDir = func.getFileWithExtension(rootPath, "py");
-    let test = new Test("", "", new PythonHandler());
+    let compatibleFiles = func.getFileWithExtension(rootPath, languageInterface.testFileExtension);
+    let test = new Test("", "", languageInterface);
     let quickPickPromise = new Promise<string>(resolve => {
         const quickPick = vscode.window.createQuickPick();
-        quickPick.items = pyFilesInDir.map(s => ({ label: s }));
+        quickPick.items = compatibleFiles.map(s => ({ label: s }));
         quickPick.title = "Choose a file";
 
         quickPick.onDidChangeValue(() => {
-            if (!pyFilesInDir.includes(quickPick.value)) {
+            if (!compatibleFiles.includes(quickPick.value)) {
                 if (quickPick.value === "") {
-                    quickPick.items = pyFilesInDir.map(s => ({ label: s, detail: s + " file" }));
+                    quickPick.items = compatibleFiles.map(s => ({ label: s, detail: s + " file" }));
                 } else {
-                    let camelCaseValue = func.camelCaseToPythonString(quickPick.value);
-                    let fileWithExt = func.addExtensionToEnd(camelCaseValue, "py");
+                    let camelCaseValue = languageInterface.normalizeStringToConvention(quickPick.value);
+                    let fileWithExt = func.addExtensionToEnd(camelCaseValue, languageInterface.testFileExtension);
                     
                     quickPick.items = [{
                         label: quickPick.value,
                         detail: `Create file '${fileWithExt}'`
-                    }, ...pyFilesInDir.map(s => ({ label: s, details: s + " file" }))];
+                    }, ...compatibleFiles.map(s => ({ label: s, details: s + " file" }))];
                 }
             }
         });
@@ -38,9 +38,9 @@ export function addTestToFile(rootPath: string | null) {
         quickPick.onDidAccept(() => {
             let { label } = quickPick.activeItems[0];
             
-            if (path.parse(label).ext !== "py") {
+            if (path.parse(label).ext !== languageInterface.testFileExtension) {
                 let labelName = path.parse(label).name;
-                label = path.join(path.parse(label).dir, func.addExtensionToEnd(labelName, "py"));
+                label = path.join(path.parse(label).dir, func.addExtensionToEnd(labelName, languageInterface.testFileExtension));
             }
             resolve(label);
             quickPick.hide();
@@ -54,8 +54,8 @@ export function addTestToFile(rootPath: string | null) {
             test.setFile("");
             return;
         } else {
-            if (!pyFilesInDir.includes(value)) {                              
-                value = func.camelCaseToPythonString(value);
+            if (!compatibleFiles.includes(value)) {                              
+                value = languageInterface.normalizeStringToConvention(value);
             }
 
             test.setFile(path.join(rootPath, value));
@@ -67,9 +67,9 @@ export function addTestToFile(rootPath: string | null) {
                 value = "";
             }
 
-            return func.camelCaseToPythonString(value);
-        }).then(pythonStringValue => {
-            test.setName(pythonStringValue);
+            return languageInterface.normalizeStringToConvention(value);
+        }).then(normalizedStringValue => {
+            test.setName(normalizedStringValue);
             test.appendTestToFile();
             openDocumentToLine(test.getFile(), -1);
 

@@ -1,6 +1,9 @@
 import { readFileSync } from "fs";
+import { parse } from "path";
 import * as vscode from "vscode";
-import { getLineCount } from "./func";
+import { LanguageInterface } from "./extension_func/languageInterface";
+import FileExtensionHashtable from "./FileExtensionHashtable";
+import { getAllFiles, getLineCount, getMostFrequent } from "./func";
 
 export function openDocumentToLine(filepath: string, line: number) {
     let fileUri = vscode.Uri.file(filepath);
@@ -22,4 +25,27 @@ export function openDocumentToLine(filepath: string, line: number) {
                     editor.revealRange(range);
                 });
         });
+}
+
+export function getCurrentCodeLanguage (): LanguageInterface {
+    let filename = vscode.window.activeTextEditor?.document.fileName;
+    let ext;
+    if (!filename) { 
+        const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+            ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+        if (rootPath === null) {
+            throw new Error("Can't find root path.");
+        }
+
+        let files: string[] = getAllFiles(rootPath);
+        ext = getMostFrequent(files.map(f => parse(f).ext)) || "";
+    } else {
+        ext = parse(filename).ext;
+    }
+    
+    if (!Object.keys(FileExtensionHashtable).includes(ext)) {
+        throw new Error("Unknown Extension for FileExtensionHashtable.");
+    }
+
+    return FileExtensionHashtable[ext];
 }

@@ -39,5 +39,10 @@ export interface LanguageInterface {
     /**
      * Create a test 
      */
-    addTest (testName: string): string
+     getTestFormat (testName: string): string
+
+    /**
+     * vscode implementation of commande 'Add Test to File'.
+     */
+    addTestToFile (rootPath: string): void
 };

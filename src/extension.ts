@@ -5,7 +5,6 @@ import * as vscode from 'vscode';
 import { addTestToFile } from './extension_func/addTestToFile';
 import { CoverageReport } from './extension_func/coverageReport/coverageReport';
 import { CoverageReportProvider } from './extension_func/coverageReport/provider';
-import { PythonHandler } from './extension_func/language/PythonHandler';
 import { handleTextDocumentChangeEvent, handleTextDocumentSaveEvent } from './extension_func/textDocumentChange';
 import { getCurrentCodeLanguage, getRootPath } from './vscodefunc';
 

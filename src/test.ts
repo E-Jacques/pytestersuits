@@ -46,7 +46,7 @@ export class Test {
         });
         this.importTestLibraryIfNeeded();
 
-        let testString = this.languageInterface.addTest(this.name);
+        let testString = this.languageInterface.getTestFormat(this.name);
 
         appendFile(this.file, testString, err => {
             if (err) { console.error(err); }

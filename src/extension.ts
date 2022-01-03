@@ -7,12 +7,12 @@ import { CoverageReport } from './extension_func/coverageReport/coverageReport';
 import { CoverageReportProvider } from './extension_func/coverageReport/provider';
 import { PythonHandler } from './extension_func/language/PythonHandler';
 import { handleTextDocumentChangeEvent, handleTextDocumentSaveEvent } from './extension_func/textDocumentChange';
+import { getRootPath } from './vscodefunc';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is execute
 export function activate(context: vscode.ExtensionContext) {
-	const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
-            ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+	const rootPath = getRootPath();
 
 	vscode.commands.registerCommand('pytestersuits.addTestToFile', () => addTestToFile(rootPath));
 	const coverageReportProvider = new CoverageReportProvider(

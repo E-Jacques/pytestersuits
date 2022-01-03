@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import { basename, dirname } from "path";
 import { TextDocument, TextDocumentChangeEvent, workspace } from "vscode";
+import { getRootPath } from "../vscodefunc";
 import { CoverageReportProvider } from "./coverageReport/provider";
 
 export function handleTextDocumentChangeEvent(ev: TextDocumentChangeEvent, coverageReportTree: CoverageReportProvider) {
@@ -20,8 +21,7 @@ export function handleTextDocumentChangeEvent(ev: TextDocumentChangeEvent, cover
 
 export function handleTextDocumentSaveEvent(textDocument: TextDocument, coverageReportTree: CoverageReportProvider) {
     let dirpath = dirname(textDocument.uri.path);
-    const rootPath = (workspace.workspaceFolders && (workspace.workspaceFolders.length > 0))
-            ? workspace.workspaceFolders[0].uri.fsPath : null;
+    const rootPath = getRootPath();
     if (rootPath === null) {
         return;
     }

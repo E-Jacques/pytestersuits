@@ -5,6 +5,7 @@ import { accessSync, readdirSync, readFileSync } from "fs";
 import { isExtension } from "../../func";
 import { join, relative } from "path";
 import { FileReport, LanguageInterface, LinesReport } from "../languageInterface";
+import { getRootPath } from "../../vscodefunc";
 
 type FullCoverageReport = {
     fileReport: FileReport,
@@ -77,8 +78,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
     }
 
     public actOnChange(filename: string, start: number, end: number) {
-        const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
-            ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+        const rootPath = getRootPath();
         if (rootPath === null) { return; }
 
         let relativeFilename = relative(rootPath, filename);

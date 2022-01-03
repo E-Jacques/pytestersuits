@@ -27,12 +27,11 @@ export function openDocumentToLine(filepath: string, line: number) {
         });
 }
 
-export function getCurrentCodeLanguage (): LanguageInterface {
+export function getCurrentCodeLanguage(): LanguageInterface {
     let filename = vscode.window.activeTextEditor?.document.fileName;
     let ext;
-    if (!filename) { 
-        const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
-            ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+    if (!filename) {
+        const rootPath = getRootPath();
         if (rootPath === null) {
             throw new Error("Can't find root path.");
         }
@@ -42,10 +41,15 @@ export function getCurrentCodeLanguage (): LanguageInterface {
     } else {
         ext = parse(filename).ext;
     }
-    
+
     if (!Object.keys(FileExtensionHashtable).includes(ext)) {
         throw new Error("Unknown Extension for FileExtensionHashtable.");
     }
 
     return FileExtensionHashtable[ext];
+}
+
+export function getRootPath(): string | null {
+    return (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+        ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
 }

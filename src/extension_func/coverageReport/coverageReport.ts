@@ -1,5 +1,6 @@
 import *  as vscode from "vscode";
 import { join } from "path";
+import { getRootPath } from "../../vscodefunc";
 
 export class CoverageReport extends vscode.TreeItem {
   contextValue?: string | undefined;
@@ -32,8 +33,7 @@ export class CoverageReport extends vscode.TreeItem {
   }
 
   public async goto () {
-    const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
-	? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+    const rootPath = getRootPath();
 
     if (rootPath === null) {
       vscode.window.showErrorMessage(`Couldn't open file ${join(this.filepath)}`);

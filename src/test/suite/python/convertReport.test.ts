@@ -1,186 +1,8 @@
 import * as assert from "assert";
-import * as coverReportFunc from "../../extension_func/coverageReport/func";
+import * as coverReportFunc from "../../../extension_func/coverageReport/func";
+import { PythonHandler } from "../../../extension_func/language/PythonHandler";
 
-suite("Testing cover report data recuperation", () => {
-    const data = `<!DOCTYPE html>
-    <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>Coverage report</title>
-        <link rel="icon" sizes="32x32" href="favicon_32.png">
-        <link rel="stylesheet" href="style.css" type="text/css">
-        <script type="text/javascript" src="coverage_html.js" defer></script>
-    </head>
-    <body class="indexfile">
-    <header>
-        <div class="content">
-            <h1>Coverage report:
-                <span class="pc_cov">93%</span>
-            </h1>
-            <div id="help_panel_wrapper">
-                <input id="help_panel_state" type="checkbox">
-                <label for="help_panel_state">
-                    <img id="keyboard_icon" src="keybd_closed.png" alt="Show/hide keyboard shortcuts" />
-                </label>
-                <div id="help_panel">
-                    <p class="legend">Shortcuts on this page</p>
-                    <div>
-                        <p class="keyhelp">
-                            <kbd>n</kbd>
-                            <kbd>s</kbd>
-                            <kbd>m</kbd>
-                            <kbd>x</kbd>
-                            <kbd>c</kbd> &nbsp; change column sorting
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <form id="filter_container">
-                <input id="filter" type="text" value="" placeholder="filter..." />
-            </form>
-        </div>
-    </header>
-    <main id="index">
-        <table class="index" data-sortable>
-            <thead>
-                <tr class="tablehead" title="Click to sort">
-                    <th class="name left" aria-sort="none" data-shortcut="n">Module</th>
-                    <th aria-sort="none" data-default-sort-order="descending" data-shortcut="s">statements</th>
-                    <th aria-sort="none" data-default-sort-order="descending" data-shortcut="m">missing</th>
-                    <th aria-sort="none" data-default-sort-order="descending" data-shortcut="x">excluded</th>
-                    <th class="right" aria-sort="none" data-shortcut="c">coverage</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="file">
-                    <td class="name left"><a href="auth_py.html">auth.py</a></td>
-                    <td>43</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="42 43">98%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="automaton_py.html">automaton.py</a></td>
-                    <td>79</td>
-                    <td>10</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="69 79">87%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="automaton_response_py.html">automaton_response.py</a></td>
-                    <td>4</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="4 4">100%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="command_py.html">command.py</a></td>
-                    <td>22</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="22 22">100%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="exceptions_py.html">exceptions.py</a></td>
-                    <td>18</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="18 18">100%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="log_py.html">log.py</a></td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="0 0">100%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="main_py.html">main.py</a></td>
-                    <td>4</td>
-                    <td>4</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="0 4">0%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="role_py.html">role.py</a></td>
-                    <td>25</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="25 25">100%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="test_auth_py.html">test_auth.py</a></td>
-                    <td>43</td>
-                    <td>8</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="35 43">81%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="test_automaton_py.html">test_automaton.py</a></td>
-                    <td>77</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="77 77">100%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="test_command_py.html">test_command.py</a></td>
-                    <td>10</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="10 10">100%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="test_log_py.html">test_log.py</a></td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="0 0">100%</td>
-                </tr>
-                <tr class="file">
-                    <td class="name left"><a href="test_role_py.html">test_role.py</a></td>
-                    <td>19</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="19 19">100%</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr class="total">
-                    <td class="name left">Total</td>
-                    <td>344</td>
-                    <td>23</td>
-                    <td>0</td>
-                    <td class="right" data-ratio="321 344">93%</td>
-                </tr>
-            </tfoot>
-        </table>
-        <p id="no_rows">
-            No items found using the specified filter.
-        </p>
-    </main>
-    <footer>
-        <div class="content">
-            <p>
-                <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.1.1</a>,
-                created at 2021-11-30 15:44 +0100
-            </p>
-        </div>
-    </footer>
-    </body>
-    </html>`;
-
-    test("Returning percent for file", () => {
-        const dataAnalyze = coverReportFunc.extractFilesPercentages(data);
-        assert.strictEqual(dataAnalyze.filter(o => o.filename === "auth.py").length, 1);
-        assert.strictEqual(dataAnalyze.filter(o => o.filename === "auth.py")[0].percent, 98);
-        assert.strictEqual(dataAnalyze.filter(o => o.filename === "main.py").length, 1);
-        assert.strictEqual(dataAnalyze.filter(o => o.filename === "main.py")[0].percent, 0);
-        assert.strictEqual(dataAnalyze.filter(o => o.filename === "test_auth.py").length, 1);
-        assert.strictEqual(dataAnalyze.filter(o => o.filename === "test_auth.py")[0].percent, 81);
-        assert.strictEqual(dataAnalyze.filter(o => o.filename === "test_role.py").length, 1);
-        assert.strictEqual(dataAnalyze.filter(o => o.filename === "test_role.py")[0].percent, 100);
-    });
-});
+const pythonHandler = new PythonHandler();
 
 suite("Testing covered line", () => {
     const data = `<!DOCTYPE html>
@@ -313,7 +135,7 @@ suite("Testing covered line", () => {
     </footer>
     </body>
     </html>`;
-    const linesData = coverReportFunc.extractLinesPercentages(data);
+    const linesData = pythonHandler.extractLinesPercentages(data);
 
     test("Should return correct tested lines", () => {
         assert(linesData.tested.includes(1));
@@ -466,7 +288,7 @@ suite("Change tested and untested lines index", () => {
     </html>`;
 
     test("Writing on one line should change arrays", () => {
-        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        let linesReport = pythonHandler.extractLinesPercentages(data);
         assert(linesReport.tested.includes(2));
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 2, 2);
         assert(!linesReport.notTested.includes(2));
@@ -478,7 +300,7 @@ suite("Change tested and untested lines index", () => {
     });
 
     test("Add at first line should move all lines", () => {
-        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        let linesReport = pythonHandler.extractLinesPercentages(data);
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 1, 2);
         assert(!linesReport.notTested.includes(1));
         assert(!linesReport.tested.includes(1));
@@ -493,12 +315,12 @@ suite("Change tested and untested lines index", () => {
     });
 
     test("Handle impossible line change", () => {
-        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        let linesReport = pythonHandler.extractLinesPercentages(data);
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 2, 1);
     });
 
     test("Changing middle line should move only some of the lines", () => {
-        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        let linesReport = pythonHandler.extractLinesPercentages(data);
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 20, 21);
         assert(!linesReport.notTested.includes(20));
         assert(!linesReport.tested.includes(20));
@@ -514,7 +336,7 @@ suite("Change tested and untested lines index", () => {
     });
 
     test("Editing multiple lines should move multiple lines", () => {
-        let linesReport = coverReportFunc.extractLinesPercentages(data);
+        let linesReport = pythonHandler.extractLinesPercentages(data);
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 20, 26);
         assert(linesReport.notHandled.includes(20));
         assert(linesReport.notHandled.includes(21));

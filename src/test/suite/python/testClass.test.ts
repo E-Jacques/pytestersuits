@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import { readFile, readFileSync, unlink, writeFile, writeFileSync } from "fs";
 
-import { Test } from "../../test";
+import { Test } from "../../../test";
 
 suite("Testing Test.appendTestToFile", () => {
 

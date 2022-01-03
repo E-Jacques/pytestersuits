@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import { addTestToFile } from './extension_func/addTestToFile';
 import { CoverageReport } from './extension_func/coverageReport/coverageReport';
 import { CoverageReportProvider } from './extension_func/coverageReport/provider';
+import { PythonHandler } from './extension_func/language/PythonHandler';
 import { handleTextDocumentChangeEvent, handleTextDocumentSaveEvent } from './extension_func/textDocumentChange';
 
 // this method is called when your extension is activated
@@ -15,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	vscode.commands.registerCommand('pytestersuits.addTestToFile', () => addTestToFile(rootPath));
 	const coverageReportProvider = new CoverageReportProvider(
-		join((vscode.workspace.workspaceFolders || [{ uri: { path: "." } }])[0].uri.path, "htmlcov"));
+		join((vscode.workspace.workspaceFolders || [{ uri: { path: "." } }])[0].uri.path, "htmlcov"), new PythonHandler());
 	vscode.window.createTreeView("coverReport", {
 		treeDataProvider: coverageReportProvider
 	});

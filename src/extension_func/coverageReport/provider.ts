@@ -4,7 +4,7 @@ import * as coverageReportFunc from "./func";
 import { accessSync, readdirSync, readFileSync } from "fs";
 import { isExtension } from "../../func";
 import { join, relative } from "path";
-import { FileReport, LinesReport } from "../languageInterface";
+import { FileReport, LanguageInterface, LinesReport } from "../languageInterface";
 
 type FullCoverageReport = {
     fileReport: FileReport,
@@ -17,7 +17,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
     private _onDidChangeTreeData: vscode.EventEmitter<CoverageReport | undefined | void> = new vscode.EventEmitter<CoverageReport | undefined | void>();
     readonly onDidChangeTreeData: vscode.Event<CoverageReport | undefined | void> = this._onDidChangeTreeData.event;
 
-    constructor(private coveragePath: string) {
+    constructor(private coveragePath: string, private languageInterface: LanguageInterface) {
         this.coverageReportList = [];
         this.buildCoverageReportList();
     }
@@ -66,15 +66,9 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         for (let file of htmlFiles) {
             let filepath = join(this.coveragePath, file);
             let data = readFileSync(filepath, "utf-8");
-            let originalFilenameMatch = data.match(/<title>(.*)<\/title>/);
-            if (originalFilenameMatch === null) { throw new Error("Bad format for coverage report file."); }
-            let originalFilename = originalFilenameMatch[1].replace(/\s+/g, '').split(":")[0].substring(11);
 
-            let fileReport: FileReport = {
-                filename: originalFilename,
-                percent: Number.parseInt(originalFilenameMatch[1].replace(/\s+/g, '').split(":")[1])
-            };
-            let linesReport: LinesReport = coverageReportFunc.extractLinesPercentages(data);
+            let fileReport = this.languageInterface.extractFilesPercentages(data);
+            let linesReport: LinesReport = this.languageInterface.extractLinesPercentages(data);
             this.coverageReportList.push({
                 fileReport,
                 linesReport

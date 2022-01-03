@@ -4,6 +4,7 @@ import *  as vscode from "vscode";
 import * as func from '../func';
 import { Test } from '../test';
 import { openDocumentToLine } from '../vscodefunc';
+import { PythonHandler } from "./language/PythonHandler";
 
 export function addTestToFile(rootPath: string | null) {
     if (!rootPath) {
@@ -12,7 +13,7 @@ export function addTestToFile(rootPath: string | null) {
     }
 
     let pyFilesInDir = func.getFileWithExtension(rootPath, "py");
-    let test = new Test("", "");
+    let test = new Test("", "", new PythonHandler());
     let quickPickPromise = new Promise<string>(resolve => {
         const quickPick = vscode.window.createQuickPick();
         quickPick.items = pyFilesInDir.map(s => ({ label: s }));

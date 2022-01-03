@@ -12,6 +12,7 @@ export type LinesReport = {
 export interface LanguageInterface {
     fileExtension: string;
     testFileExtension: string;
+    importLibraries: string;
 
     /**
      * Transform a string to it's equivalent in the good language convention.
@@ -28,10 +29,15 @@ export interface LanguageInterface {
     /**
      * Get filename and percent from html data
      */
-    extractFilesPercentages(htmlData: string): FileReport[]
+    extractFilesPercentages(htmlData: string): FileReport
 
     /**
      * Run the coverage report to generate the html files
      */
     runCoverageReport(dirpath: string, cwd: string): void
+
+    /**
+     * Create a test 
+     */
+    addTest (testName: string): string
 };

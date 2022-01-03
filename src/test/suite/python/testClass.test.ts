@@ -1,7 +1,8 @@
 import * as assert from "assert";
 import { readFile, readFileSync, unlink, writeFile, writeFileSync } from "fs";
+import { PythonHandler } from "../../../extension_func/language/PythonHandler";
 
-import { Test } from "../../test";
+import { Test } from "../../../test";
 
 suite("Testing Test.appendTestToFile", () => {
 
@@ -9,7 +10,7 @@ suite("Testing Test.appendTestToFile", () => {
         const filename = "test_env/test_first.py";
         const testName = "first";
 
-        let test = new Test(testName, filename);
+        let test = new Test(testName, filename, new PythonHandler());
 
         writeFileSync(filename, "");
         test.appendTestToFile();
@@ -26,8 +27,8 @@ suite("Testing Test.appendTestToFile", () => {
         const testName1 = "first";
         const testName2 = "second";
 
-        let test1 = new Test(testName1, filename);
-        let test2 = new Test(testName2, filename);
+        let test1 = new Test(testName1, filename, new PythonHandler());
+        let test2 = new Test(testName2, filename, new PythonHandler());
 
         writeFileSync(filename, "");
 
@@ -46,7 +47,7 @@ suite("Testing Test.importTestLibraryIfNeeded", () => {
         const filename = "test_env/test_third.py";
         const testName = "first";
 
-        let test = new Test(testName, filename);
+        let test = new Test(testName, filename, new PythonHandler());
         writeFileSync(filename, `import trucmuch
         from test import func
 
@@ -79,7 +80,7 @@ suite("Testing Test.fileContainsImport", () => {
         const filename = "test_env/test_fourth.py";
         const testName = "first";
 
-        let test = new Test(testName, filename);
+        let test = new Test(testName, filename, new PythonHandler());
 
         writeFileSync(filename, "import pytest");
         assert(test.fileContainsImport());
@@ -92,7 +93,7 @@ suite("Testing Test.fileContainsImport", () => {
         const filename = "test_env/test_fifth.py";
         const testName = "first";
 
-        let test = new Test(testName, filename);
+        let test = new Test(testName, filename, new PythonHandler());
 
         writeFileSync(filename, "");
         assert(!test.fileContainsImport());

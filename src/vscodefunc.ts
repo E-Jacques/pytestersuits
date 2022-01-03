@@ -1,6 +1,9 @@
 import { readFileSync } from "fs";
+import { parse } from "path";
 import * as vscode from "vscode";
-import { getLineCount } from "./func";
+import { LanguageInterface } from "./extension_func/languageInterface";
+import { getDefaultLanguage, getLanguageFromExt } from "./FileExtensionHashtable";
+import { getAllFiles, getLineCount, getMostFrequent } from "./func";
 
 export function openDocumentToLine(filepath: string, line: number) {
     let fileUri = vscode.Uri.file(filepath);
@@ -22,4 +25,27 @@ export function openDocumentToLine(filepath: string, line: number) {
                     editor.revealRange(range);
                 });
         });
+}
+
+export function getCurrentCodeLanguage(): LanguageInterface {
+    let filename = vscode.window.activeTextEditor?.document.fileName;
+    let ext;
+    if (!filename) {
+        const rootPath = getRootPath();
+        if (rootPath === null) {
+            return getDefaultLanguage();
+        }
+
+        let files: string[] = getAllFiles(rootPath);
+        ext = getMostFrequent(files.map(f => parse(f).ext)) || "";
+    } else {
+        ext = parse(filename).ext;
+    }
+
+    return getLanguageFromExt(ext);
+}
+
+export function getRootPath(): string | null {
+    return (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+        ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
 }

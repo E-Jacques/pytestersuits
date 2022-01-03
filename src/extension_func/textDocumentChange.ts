@@ -1,7 +1,8 @@
-import { execSync } from "child_process";
-import { basename, dirname } from "path";
-import { TextDocument, TextDocumentChangeEvent, workspace } from "vscode";
+import { dirname, parse } from "path";
+import { TextDocument, TextDocumentChangeEvent } from "vscode";
+import { getRootPath } from "../vscodefunc";
 import { CoverageReportProvider } from "./coverageReport/provider";
+import { getLanguageFromExt } from "../FileExtensionHashtable";
 
 export function handleTextDocumentChangeEvent(ev: TextDocumentChangeEvent, coverageReportTree: CoverageReportProvider) {
     let textDocument = ev.document;
@@ -20,15 +21,14 @@ export function handleTextDocumentChangeEvent(ev: TextDocumentChangeEvent, cover
 
 export function handleTextDocumentSaveEvent(textDocument: TextDocument, coverageReportTree: CoverageReportProvider) {
     let dirpath = dirname(textDocument.uri.path);
-    const rootPath = (workspace.workspaceFolders && (workspace.workspaceFolders.length > 0))
-            ? workspace.workspaceFolders[0].uri.fsPath : null;
+    const ext = parse(textDocument.uri.path).ext;
+    const languageInterface = getLanguageFromExt(ext);
+    const rootPath = getRootPath();
     if (rootPath === null) {
         return;
     }
      
-    execSync("pytest --cov-report html --cov=" + dirpath, {
-        cwd: rootPath
-    });
+    languageInterface.runCoverageReport(dirpath, rootPath);
 
     coverageReportTree.buildCoverageReportList();
     coverageReportTree.reload();

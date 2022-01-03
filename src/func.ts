@@ -5,6 +5,38 @@ export function getLineCount(textToEvaluate: string): number {
     return textToEvaluate.split(/\r\n|\r|\n/).length;
 }
 
+export function getMaxIndex (arr: number[]): number {
+    if (arr.length === 0) { throw new Error("Can't get maximum value of an empty array."); }
+    let maxIndex = 0;
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[maxIndex] < arr[i]) {
+            maxIndex = i;
+        }
+    }
+
+    return maxIndex;
+}
+
+export function getMostFrequent(arr: string[]): string | null {
+    if (arr.length === 0) { return null; }
+    let counts: number[] = [];
+    let keys: string[] = [];
+
+    for (let s of arr) {
+        if (!keys.includes(s)) {
+            counts.push(1);
+            keys.push(s);
+            continue;
+        }
+
+        let idx = keys.indexOf(s);
+        counts[idx]++;
+    }
+
+    let idx = getMaxIndex(counts);
+    return keys[idx];
+}
+
 export function addExtensionToEnd (filename: string, ext: string): string {
     if (ext[0] !== ".") { ext = "." + ext; }
     let extDotCount = ext.split(".").length - 1;
@@ -77,6 +109,22 @@ export function camelCaseToPythonString(toTransform: string): string {
     res = res.split(" ").join("_");
 
     return res;
+}
+
+export function getAllFiles (dirToScan: string): string[] {
+    try {
+        accessSync(dirToScan);
+    } catch (error) {
+        return [];
+    }
+
+    let files = readdirSync(dirToScan);
+    let dirs = files.filter(f => isDirectory(f));
+    for (let dir of dirs) {
+        files.concat(getAllFiles(dir));
+    }
+    
+    return files;
 }
 
 export function getFileWithExtension(dirToScan: string, ext: string): string[] {

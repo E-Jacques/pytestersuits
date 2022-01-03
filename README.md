@@ -33,3 +33,7 @@ Implmentation of a embeded UI to show you code test coverage with auto update on
 Fixing an issue concerning `Add Test to File`.
 New you can provide any type of name (with or without '.py', even with part of it), it will correctly add the file extension at the end.
 
+### 2.0.0
+
+Refactoring the hole app the develop the extension for multiple languages.
+For the moment only python is handle (with pytest). But more will come ;)

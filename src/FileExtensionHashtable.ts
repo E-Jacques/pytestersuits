@@ -1,14 +1,12 @@
-import { PythonHandler } from "./extension_func/language/PythonHandler";
 import { LanguageInterface } from "./extension_func/languageInterface";
+import * as PythonHandler from "./extension_func/language/PythonHandler";
 
 interface HashTable {
-    [key: string]: LanguageInterface;
+    [key: string]: any;
 }
 
 let hashTable: HashTable = {};
-hashTable["py"] = new PythonHandler();
-
-export default hashTable;
+hashTable["py"] = PythonHandler.PythonHandler;
 
 export function getDefaultLanguage (): LanguageInterface {
     return hashTable[Object.keys(hashTable)[0]];

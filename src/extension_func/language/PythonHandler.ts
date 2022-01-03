@@ -12,6 +12,8 @@ export class PythonHandler implements LanguageInterface {
     public testFileExtension = "py";
     public importLibraries = "import pytest";
 
+    constructor () {}
+
     public runCoverageReport(dirpath: string, cwd: string): void {
         execSync("pytest --cov-report html --cov=" + dirpath, {
             cwd

@@ -4,10 +4,11 @@ import * as coverageReportFunc from "./func";
 import { accessSync, readdirSync, readFileSync } from "fs";
 import { isExtension } from "../../func";
 import { join, relative } from "path";
+import { FileReport, LinesReport } from "../languageInterface";
 
 type FullCoverageReport = {
-    fileReport: coverageReportFunc.FileReport,
-    linesReport: coverageReportFunc.LinesReport
+    fileReport: FileReport,
+    linesReport: LinesReport
 };
 
 export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageReport> {
@@ -69,11 +70,11 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
             if (originalFilenameMatch === null) { throw new Error("Bad format for coverage report file."); }
             let originalFilename = originalFilenameMatch[1].replace(/\s+/g, '').split(":")[0].substring(11);
 
-            let fileReport: coverageReportFunc.FileReport = {
+            let fileReport: FileReport = {
                 filename: originalFilename,
                 percent: Number.parseInt(originalFilenameMatch[1].replace(/\s+/g, '').split(":")[1])
             };
-            let linesReport: coverageReportFunc.LinesReport = coverageReportFunc.extractLinesPercentages(data);
+            let linesReport: LinesReport = coverageReportFunc.extractLinesPercentages(data);
             this.coverageReportList.push({
                 fileReport,
                 linesReport
@@ -97,14 +98,14 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         this._onDidChangeTreeData.fire();
     }
 
-    private getFileReport(coverageReport: coverageReportFunc.FileReport): CoverageReport {
+    private getFileReport(coverageReport: FileReport): CoverageReport {
         let collapse = vscode.TreeItemCollapsibleState.Collapsed;
         if (coverageReport.percent === 100) { collapse = vscode.TreeItemCollapsibleState.None; }
         
         return new CoverageReport(coverageReport.filename, coverageReport.percent, null, collapse);
     }
 
-    private getLinesReport(filename: string): coverageReportFunc.LinesReport | null {
+    private getLinesReport(filename: string): LinesReport | null {
         let filtered = this.coverageReportList.filter(r => r.fileReport.filename === filename);
 
         if (filtered.length === 0) {
@@ -114,7 +115,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         return filtered[0].linesReport;
     }
 
-    private setNewLinesReport(filename: string, newLinesReport: coverageReportFunc.LinesReport) {
+    private setNewLinesReport(filename: string, newLinesReport: LinesReport) {
         let filtered = this.coverageReportList.filter(r => r.fileReport.filename === filename);
 
         if (filtered.length === 0) {
@@ -124,7 +125,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         filtered[0].linesReport = newLinesReport;
     }
 
-    private getNotTestedFiles(orignalFilename: string, coverageReport: coverageReportFunc.LinesReport): CoverageReport[] {
+    private getNotTestedFiles(orignalFilename: string, coverageReport: LinesReport): CoverageReport[] {
         let res: CoverageReport[] = [];
 
         for (let line of coverageReport.notTested) {
@@ -134,7 +135,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
         return res;
     }
 
-    private getNotHandledFiles(orignalFilename: string, coverageReport: coverageReportFunc.LinesReport): CoverageReport[] {
+    private getNotHandledFiles(orignalFilename: string, coverageReport: LinesReport): CoverageReport[] {
         let res: CoverageReport[] = [];
 
         for (let line of coverageReport.notHandled) {

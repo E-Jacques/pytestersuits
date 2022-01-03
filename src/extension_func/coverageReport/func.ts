@@ -1,15 +1,6 @@
 import { parse } from "node-html-parser";
+import { FileReport, LinesReport } from "../languageInterface";
 
-export type FileReport = {
-    filename: string,
-    percent: number
-};
-
-export type LinesReport = {
-    tested: number[],
-    notTested: number[],
-    notHandled: number[]
-};
 
 /**
  * Should work with pytest's index.html cover report file.

@@ -1,7 +1,7 @@
 import * as assert from "assert";
 
 import { before } from 'mocha';
-import { access, mkdir, writeFile } from 'fs';
+import { access, existsSync, mkdir, writeFile } from 'fs';
 import { join } from 'path';
 import * as func from "../../func";
 
@@ -177,5 +177,36 @@ suite("Testing addExtensionToEnd", () => {
 		assert.strictEqual(func.addExtensionToEnd("a.py", "py"), "a.py");
 		assert.strictEqual(func.addExtensionToEnd("test.py", "py"), "test.py");
 		assert.strictEqual(func.addExtensionToEnd("b.test.js", "test.js"), "b.test.js");
+	});
+});
+
+suite ("Testing getMostFrequent", () => {
+	test("Empty array should return null", () => {
+		assert.strictEqual(func.getMostFrequent([]), null);
+	});
+
+	test("Should return correct one", () => {
+		assert.strictEqual(func.getMostFrequent(["py", "py", "js"]), "py");
+		assert.strictEqual(func.getMostFrequent(["py"]), "py");
+	});
+
+	test("Should return first one if same amount", () => {
+		assert.strictEqual(func.getMostFrequent(["py", "js"]), "py");
+	});
+});
+
+suite("Testing getMaxIndex", () =>  {
+	test("Should throw error on empty array", () => {
+		assert.throws(() => func.getMaxIndex([]), Error, "Can't get maximum value of an empty array.");
+	});
+
+	test("Should return correct index", () => {
+		assert.strictEqual(func.getMaxIndex([1, 2, 5, 6]), 3);
+		assert.strictEqual(func.getMaxIndex([5, 4, 2]), 0);
+		assert.strictEqual(func.getMaxIndex([4, 5, 3]), 1);
+	});
+
+	test("First return first matching index", () => {
+		assert.strictEqual(func.getMaxIndex([1, 3, 3, 2]), 1);
 	});
 });

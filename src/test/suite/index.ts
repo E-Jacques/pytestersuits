@@ -40,39 +40,49 @@ export function run(): Promise<void> {
 }
 
 
-export function createFile(filename: string) {
-	access(filename, accessErr => {
-		if (accessErr) {
+export function createFile(filename: string): Promise<void> {
+	return new Promise<void>((resolve) => {
+		access(filename, accessErr => {
+			if (accessErr) {
+				writeFile(filename, "", err => {
+					// if (err) { console.error(err); }
+				});
+			}
 
-			writeFile(filename, "", err => {
-				if (err) { console.error(err); }
-			});
-		}
+			resolve();
+		});
 	});
 }
 
-export function createDir(dirpath: string) {
-	access(dirpath, (accessErr) => {
-		if (accessErr) {
-			mkdir(dirpath, { recursive: true }, err => {
-				if (err) { console.error(err); }
-			});
-		}
+export function createDir(dirpath: string): Promise<void> {
+	return new Promise<void>((resolve, _reject) => {
+		access(dirpath, (accessErr) => {
+			if (accessErr) {
+				mkdir(dirpath, { recursive: true }, err => {
+					// if (err) { console.error(err); }
+				});
+			}
+
+			resolve();
+		});
 	});
 }
 
-export function createTestDir(dirName: string, filenames: string[], layerFilenames: string[]) {
-	createDir(dirName);
+export function createTestDir(dirName: string, filenames: string[], layerFilenames: string[]): Promise<void> {
+	return new Promise<void>((resolve) => {
+		createDir(dirName).then(() => {
+			for (let filename of filenames) {
+				createFile(join(dirName, filename));
+			}
 
-	for (let filename of filenames) {
-		createFile(join(dirName, filename));
-	}
-
-	createDir(join(dirName, "layer"));
-
-	for (let filename of layerFilenames) {
-		createFile(join(dirName, "layer", filename));
-	}
+			createDir(join(dirName, "layer")).then(() => {
+				for (let filename of layerFilenames) {
+					createFile(join(dirName, "layer", filename));
+				}
+				resolve();
+			});
+		});
+	});
 
 
 }

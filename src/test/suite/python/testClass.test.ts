@@ -12,14 +12,13 @@ suite("Testing Test.appendTestToFile", () => {
 
     before(() => {
         return new Promise<void>((resolve) => {
-            setTimeout(() => {
-                createDir(testDir);
-                setTimeout(() => {
-                    createFile(join(testDir, "test_first.py"));
+            createDir(testDir).then(() => {
+                createFile(join(testDir, "test_first.py")).then(() => {
                     createFile(join(testDir, "test_second.py"));
-                }, 200);
-                resolve();
-            }, 400);
+                }).then(() => {
+                    resolve();
+                });
+            });
         });
     });
 

@@ -69,8 +69,9 @@ suite("isDirectory", () => {
 
 		return new Promise<void>((resolve) => {
 			setTimeout(() => {
-				createTestDir(testDir, filenames, filenames);
-				resolve();
+				createTestDir(testDir, filenames, filenames).then(() => {
+					resolve();
+				});
 			}, 200);
 		});
 	});
@@ -95,8 +96,9 @@ suite("getFileWithExtension", () => {
 
 		return new Promise<void>((resolve) => {
 			setTimeout(() => {
-				createTestDir(testDir, filenames, filenames);
-				resolve();
+				createTestDir(testDir, filenames, filenames).then(() => {
+					resolve();
+				});
 			}, 200);
 		});
 	});
@@ -123,7 +125,7 @@ suite("getFileWithExtension", () => {
 	test("Get files Recursively", () => {
 		let filteredArray = func.getFileWithExtension(testDir, "py");
 		assert(filteredArray.includes(join("layer", "test.py")));
-		assert(filteredArray.includes(join("layer","main.py")));
+		assert(filteredArray.includes(join("layer", "main.py")));
 		assert(filteredArray.includes(join("layer", "a.py")));
 	});
 });

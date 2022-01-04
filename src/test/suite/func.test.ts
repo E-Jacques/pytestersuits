@@ -84,6 +84,8 @@ suite("isDirectory", () => {
 
 	test("Is a directory", () => {
 		assert(func.isDirectory(testDir));
+		console.log(join(testDir, "layer"));
+		
 		assert(func.isDirectory(join(testDir, "layer")));
 	});
 });

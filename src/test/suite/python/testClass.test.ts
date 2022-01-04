@@ -14,8 +14,10 @@ suite("Testing Test.appendTestToFile", () => {
         return new Promise<void>((resolve) => {
             setTimeout(() => {
                 createDir(testDir);
-                createFile(join(testDir, "test_first.py"));
-                createFile(join(testDir, "test_second.py"));
+                setTimeout(() => {
+                    createFile(join(testDir, "test_first.py"));
+                    createFile(join(testDir, "test_second.py"));
+                }, 200);
                 resolve();
             }, 400);
         });

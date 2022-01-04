@@ -78,9 +78,8 @@ export function createTestDir(dirName: string, filenames: string[], layerFilenam
 			createDir(join(dirName, "layer")).then(() => {
 				for (let i = 0; i < filenames.length; i++) {
 					let filename = filenames[i];
-					if (i === filename.length - 1) {
+					if (i === filenames.length - 1) {
 						createFile(join(dirName, "layer", filename)).then(() => {
-
 							resolve();
 						});
 					} else {

@@ -68,11 +68,9 @@ suite("isDirectory", () => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
 
 		return new Promise<void>((resolve) => {
-			setTimeout(() => {
-				createTestDir(testDir, filenames, filenames).then(() => {
-					resolve();
-				});
-			}, 200);
+			createTestDir(testDir, filenames, filenames).then(() => {
+				resolve();
+			});
 		});
 	});
 
@@ -85,7 +83,7 @@ suite("isDirectory", () => {
 	test("Is a directory", () => {
 		assert(func.isDirectory(testDir));
 		console.log(join(testDir, "layer"));
-		
+
 		assert(func.isDirectory(join(testDir, "layer")));
 	});
 });
@@ -97,11 +95,9 @@ suite("getFileWithExtension", () => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
 
 		return new Promise<void>((resolve) => {
-			setTimeout(() => {
-				createTestDir(testDir, filenames, filenames).then(() => {
-					resolve();
-				});
-			}, 200);
+			createTestDir(testDir, filenames, filenames).then(() => {
+				resolve();
+			});
 		});
 	});
 

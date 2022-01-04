@@ -122,9 +122,9 @@ suite("getFileWithExtension", () => {
 
 	test("Get files Recursively", () => {
 		let filteredArray = func.getFileWithExtension(testDir, "py");
-		assert(filteredArray.includes("layer/test.py"));
-		assert(filteredArray.includes("layer/main.py"));
-		assert(filteredArray.includes("layer/a.py"));
+		assert(filteredArray.includes(join("layer", "test.py")));
+		assert(filteredArray.includes(join("layer","main.py")));
+		assert(filteredArray.includes(join("layer", "a.py")));
 	});
 });
 

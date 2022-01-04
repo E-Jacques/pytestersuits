@@ -1,13 +1,28 @@
 import * as assert from "assert";
-import { readFile, readFileSync, unlink, writeFile, writeFileSync } from "fs";
+import { readFile, readFileSync, writeFileSync } from "fs";
+import { before } from "mocha";
+import { join } from "path";
+import { createDir, createFile } from "..";
 import { PythonHandler } from "../../../extension_func/language/PythonHandler";
 
 import { Test } from "../../../test";
 
 suite("Testing Test.appendTestToFile", () => {
+    const testDir = join(__filename, "..", "..", "test_env");
+
+    before(() => {
+        return new Promise<void>((resolve) => {
+            setTimeout(() => {
+                createDir(testDir);
+                createFile(join(testDir, "test_first.py"));
+                createFile(join(testDir, "test_second.py"));
+                resolve();
+            }, 400);
+        });
+    });
 
     test("Testing for one file", () => {
-        const filename = "test_env/test_first.py";
+        const filename = join(testDir, "test_first.py");
         const testName = "first";
 
         let test = new Test(testName, filename, new PythonHandler());
@@ -23,7 +38,7 @@ suite("Testing Test.appendTestToFile", () => {
     });
 
     test("Testing for a second file", () => {
-        const filename = "test_env/test_second.py";
+        const filename = join(testDir, "test_second.py");
         const testName1 = "first";
         const testName2 = "second";
 
@@ -43,8 +58,19 @@ suite("Testing Test.appendTestToFile", () => {
 });
 
 suite("Testing Test.importTestLibraryIfNeeded", () => {
+    const testDir = join(__filename, "..", "..", "test_env");
+
+    before(() => {
+        return new Promise<void>((resolve) => {
+            setTimeout(() => {
+                createDir(testDir);
+                createFile(join(testDir, "test_third.py"));
+                resolve();
+            }, 200);
+        });
+    });
     test("Correctly write to file", () => {
-        const filename = "test_env/test_third.py";
+        const filename = join(testDir, "test_third.py");
         const testName = "first";
 
         let test = new Test(testName, filename, new PythonHandler());
@@ -74,10 +100,22 @@ import trucmuch
 });
 
 suite("Testing Test.fileContainsImport", () => {
+    const testDir = join(__filename, "..", "..", "test_env");
+
+    before(() => {
+        return new Promise<void>((resolve) => {
+            setTimeout(() => {
+                createDir(testDir);
+                createFile(join(testDir, "test_fourth.py"));
+                createFile(join(testDir, "test_fifth.py"));
+                resolve();
+            }, 200);
+        });
+    });
     test("Should detect 'import pytest'", () => {
         console.log(process.cwd());
-        
-        const filename = "test_env/test_fourth.py";
+
+        const filename = join(testDir, "test_fourth.py");
         const testName = "first";
 
         let test = new Test(testName, filename, new PythonHandler());
@@ -90,7 +128,7 @@ suite("Testing Test.fileContainsImport", () => {
     });
 
     test("Should detect when pytest is not imported", () => {
-        const filename = "test_env/test_fifth.py";
+        const filename = join(testDir, "test_fifth.py");
         const testName = "first";
 
         let test = new Test(testName, filename, new PythonHandler());

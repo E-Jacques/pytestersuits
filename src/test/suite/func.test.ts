@@ -1,51 +1,9 @@
 import * as assert from "assert";
 
 import { before } from 'mocha';
-import { access, existsSync, mkdir, writeFile } from 'fs';
 import { join } from 'path';
 import * as func from "../../func";
-
-function createFile (filename: string) {
-	try {
-		access(filename, err => {
-			if (err) { console.error(err); }
-		});
-	}
-	catch {
-
-		writeFile(filename, "", err => {
-			if (err) { console.error(err); }
-		});
-	}
-}
-
-function createDir (dirpath: string) {
-	try {
-		access(dirpath, err => {
-			if (err) { console.error(err); }
-		});
-	}
-	catch {
-
-		mkdir(dirpath, { recursive: true }, err => {
-			if (err) { console.error(err); }
-		});
-	}
-}
-
-function createTestDir(dirName: string, filenames: string[], layerFilenames: string[]) {
-	createDir(dirName);
-
-	for (let filename of filenames) {
-		createFile(join(dirName, filename));
-	}
-
-	createDir(join(dirName, "layer"));
-
-	for (let filename of layerFilenames) {
-		createFile(join(dirName, "layer", filename));
-	}
-}
+import { createTestDir } from ".";
 
 suite("getLineCount", () => {
 	test("Empty string", () => {
@@ -104,11 +62,17 @@ suite("isExtension", () => {
 });
 
 suite("isDirectory", () => {
-	const testDir = "test_env/test_tmp";
+	const testDir = join(__filename, "..", "..", "test_env", "test_tmp");
 
 	before(() => {
-		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "wrong", "a.py"];
-		createTestDir(testDir, filenames, filenames);
+		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
+
+		return new Promise<void>((resolve) => {
+			setTimeout(() => {
+				createTestDir(testDir, filenames, filenames);
+				resolve();
+			}, 200);
+		});
 	});
 
 	test("Not a directory", () => {
@@ -124,11 +88,17 @@ suite("isDirectory", () => {
 });
 
 suite("getFileWithExtension", () => {
-	const testDir = "test_env/test_tmp";
+	const testDir = join(__filename, "..", "..", "test_env", "test_tmp");
 
 	before(() => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
-		createTestDir(testDir, filenames, filenames);
+
+		return new Promise<void>((resolve) => {
+			setTimeout(() => {
+				createTestDir(testDir, filenames, filenames);
+				resolve();
+			}, 200);
+		});
 	});
 
 	test("Throw Error on dir not found", () => {
@@ -180,7 +150,7 @@ suite("Testing addExtensionToEnd", () => {
 	});
 });
 
-suite ("Testing getMostFrequent", () => {
+suite("Testing getMostFrequent", () => {
 	test("Empty array should return null", () => {
 		assert.strictEqual(func.getMostFrequent([]), null);
 	});
@@ -195,7 +165,7 @@ suite ("Testing getMostFrequent", () => {
 	});
 });
 
-suite("Testing getMaxIndex", () =>  {
+suite("Testing getMaxIndex", () => {
 	test("Should throw error on empty array", () => {
 		assert.throws(() => func.getMaxIndex([]), Error, "Can't get maximum value of an empty array.");
 	});

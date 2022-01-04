@@ -1,6 +1,8 @@
 import * as path from 'path';
 import * as Mocha from 'mocha';
 import * as glob from 'glob';
+import { access, mkdir, writeFile } from 'fs';
+import { join } from 'path';
 
 export function run(): Promise<void> {
 	// Create the mocha test
@@ -35,4 +37,42 @@ export function run(): Promise<void> {
 			}
 		});
 	});
+}
+
+
+export function createFile(filename: string) {
+	access(filename, accessErr => {
+		if (accessErr) {
+
+			writeFile(filename, "", err => {
+				if (err) { console.error(err); }
+			});
+		}
+	});
+}
+
+export function createDir(dirpath: string) {
+	access(dirpath, (accessErr) => {
+		if (accessErr) {
+			mkdir(dirpath, { recursive: true }, err => {
+				if (err) { console.error(err); }
+			});
+		}
+	});
+}
+
+export function createTestDir(dirName: string, filenames: string[], layerFilenames: string[]) {
+	createDir(dirName);
+
+	for (let filename of filenames) {
+		createFile(join(dirName, filename));
+	}
+
+	createDir(join(dirName, "layer"));
+
+	for (let filename of layerFilenames) {
+		createFile(join(dirName, "layer", filename));
+	}
+
+
 }

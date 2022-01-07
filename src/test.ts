@@ -3,10 +3,14 @@ import path = require("path");
 import { LanguageInterface } from "./extension_func/languageInterface";
 
 export class Test {
-    constructor(private name: string, private file: string, private languageInterface: LanguageInterface) {}
+    constructor(private name: string, private file: string, private languageInterface: LanguageInterface, private suiteName: string | null = null) {}
 
     public setFile(file: string) {
         this.file = file;
+    }
+
+    public setSuite(suiteName: string) {
+        this.suiteName = suiteName;
     }
 
     public getFile(): string {
@@ -46,7 +50,7 @@ export class Test {
         });
         this.importTestLibraryIfNeeded();
 
-        let testString = this.languageInterface.getTestFormat(this.name);
+        let testString = this.languageInterface.getTestFormat(this.name, this.suiteName || "");
 
         appendFile(this.file, testString, err => {
             if (err) { console.error(err); }

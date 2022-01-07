@@ -39,8 +39,11 @@ export function run(): Promise<void> {
 	});
 }
 
-
-export function createFile(filename: string): Promise<void> {
+/**
+ * Use to create tests file in mocha environment.
+ * @async
+ */
+export async function createFile(filename: string): Promise<void> {
 	return new Promise<void>((resolve) => {
 		access(filename, accessErr => {
 			if (accessErr) {
@@ -54,7 +57,11 @@ export function createFile(filename: string): Promise<void> {
 	});
 }
 
-export function createDir(dirpath: string): Promise<void> {
+/**
+ * Use to create tests directory in mocha environment.
+ * @async
+ */
+export async function createDir(dirpath: string): Promise<void> {
 	return new Promise<void>((resolve, _reject) => {
 		access(dirpath, (accessErr) => {
 			if (accessErr) {

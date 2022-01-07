@@ -180,3 +180,20 @@ suite("Testing getMaxIndex", () => {
 		assert.strictEqual(func.getMaxIndex([1, 3, 3, 2]), 1);
 	});
 });
+
+suite("Testing convertStringToCamelCase...", () => {
+	test("Shouldn't modifiy a camelCase string", () => {
+		assert.strictEqual(func.convertStringToCamelCase("camelCase"), "camelCase");
+		assert.strictEqual(func.convertStringToCamelCase("camel"), "camel");
+	});
+
+	test("Should remove first char uppercase", () => {
+		assert.strictEqual(func.convertStringToCamelCase("CamelCase"), "camelCase");
+	});
+
+	test("Should replace space and underscores", () => {
+		assert.strictEqual(func.convertStringToCamelCase("test de nuit"), "testDeNuit");
+		assert.strictEqual(func.convertStringToCamelCase("python_case"), "pythonCase");
+		assert.strictEqual(func.convertStringToCamelCase("melange de _chose"), "melangeDeChose");
+	});
+});

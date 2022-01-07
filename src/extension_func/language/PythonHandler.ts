@@ -61,7 +61,7 @@ export class PythonHandler implements LanguageInterface {
         return linesReport;
     }
 
-    public getTestFormat(testName: string): string {
+    public getTestFormat(testName: string, suiteName: string): string {
         let testString = "";
         testString += "\n@pytest.mark.skip(reason=\"generated automaticly\")\n";
         testString += `def test_${testName}():\n\tpass\n`;

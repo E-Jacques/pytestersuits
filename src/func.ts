@@ -111,6 +111,23 @@ export function camelCaseToPythonString(toTransform: string): string {
     return res;
 }
 
+export function convertStringToCamelCase(toConvert: string): string {
+    const forbidChars = [" ", "_"];
+    let correctToConvert = toConvert[0].toLowerCase() + toConvert.substring(1);
+    let res = "";
+    for (let i = 0; i < correctToConvert.length; i++) {
+        let c = correctToConvert[i];
+        if (!forbidChars.includes(c)) {
+            if (i > 0 && forbidChars.includes(correctToConvert[i-1])) {
+                res += c.toUpperCase();
+            } else {
+                res += c;
+            }
+        }
+    }
+    return res;
+}
+
 export function getAllFiles (dirToScan: string): string[] {
     try {
         accessSync(dirToScan);

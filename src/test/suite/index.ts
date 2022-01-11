@@ -76,26 +76,17 @@ export async function createDir(dirpath: string): Promise<void> {
 }
 
 export function createTestDir(dirName: string, filenames: string[], layerFilenames: string[]): Promise<void> {
-	return new Promise<void>((resolve) => {
-		createDir(dirName).then(() => {
-			for (let filename of filenames) {
-				createFile(join(dirName, filename));
-			}
+	return new Promise<void>(async (resolve) => {
+		await createDir(dirName);
+		for (let filename of filenames) {
+			await createFile(join(dirName, filename));
+		}
 
-			createDir(join(dirName, "layer")).then(() => {
-				for (let i = 0; i < filenames.length; i++) {
-					let filename = filenames[i];
-					if (i === filenames.length - 1) {
-						createFile(join(dirName, "layer", filename)).then(() => {
-							resolve();
-						});
-					} else {
-						createFile(join(dirName, "layer", filename));
-					}
-				}
-			});
-		});
+		await createDir(join(dirName, "layer"));
+		for (let filename of filenames) {
+			await createFile(join(dirName, "layer", filename));
+		}
+
+		resolve();
 	});
-
-
 }

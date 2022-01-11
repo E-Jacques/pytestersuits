@@ -2,13 +2,13 @@ import * as assert from "assert";
 import { readFile, readFileSync, writeFileSync } from "fs";
 import { before } from "mocha";
 import { join } from "path";
-import { createDir, createFile } from "..";
+import { createDir, createFile } from "../index";
 import { PythonHandler } from "../../../extension_func/language/PythonHandler";
 
 import { Test } from "../../../test";
 
 suite("Testing Test.appendTestToFile", () => {
-    const testDir = join(__filename, "..", "..", "test_env");
+    const testDir = join(__filename, "..", "..", "..", "test_env");
 
     before(() => {
         return new Promise<void>((resolve) => {
@@ -59,7 +59,7 @@ suite("Testing Test.appendTestToFile", () => {
 });
 
 suite("Testing Test.importTestLibraryIfNeeded", () => {
-    const testDir = join(__filename, "..", "..", "test_env");
+    const testDir = join(__filename, "..", "..", "..", "test_env");
 
     before(() => {
         return new Promise<void>((resolve) => {
@@ -101,7 +101,7 @@ import trucmuch
 });
 
 suite("Testing Test.fileContainsImport", () => {
-    const testDir = join(__filename, "..", "..", "test_env");
+    const testDir = join(__filename, "..", "..", "..", "test_env");
 
     before(() => {
         return new Promise<void>((resolve) => {
@@ -114,8 +114,6 @@ suite("Testing Test.fileContainsImport", () => {
         });
     });
     test("Should detect 'import pytest'", () => {
-        console.log(process.cwd());
-
         const filename = join(testDir, "test_fourth.py");
         const testName = "first";
 

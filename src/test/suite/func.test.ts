@@ -185,6 +185,10 @@ suite("Testing convertStringToCamelCase...", () => {
 		assert.strictEqual(func.convertStringToCamelCase("camel"), "camel");
 	});
 
+	test("Should return an empty string if on eis provided in input", () => {
+		assert.strictEqual(func.convertStringToCamelCase("").length, 0);
+	});
+
 	test("Should remove first char uppercase", () => {
 		assert.strictEqual(func.convertStringToCamelCase("CamelCase"), "camelCase");
 	});

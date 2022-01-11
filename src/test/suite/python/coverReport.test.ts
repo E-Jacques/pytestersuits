@@ -2,8 +2,6 @@ import * as assert from "assert";
 import * as coverReportFunc from "../../../extension_func/coverageReport/func";
 import PythonHandler from "../../../extension_func/language/PythonHandler";
 
-const pythonHandler = new PythonHandler();
-
 suite("Testing covered line", () => {
     const data = `<!DOCTYPE html>
     <html>
@@ -135,7 +133,7 @@ suite("Testing covered line", () => {
     </footer>
     </body>
     </html>`;
-    const linesData = pythonHandler.extractLinesPercentages(data);
+    const linesData = new PythonHandler().extractLinesPercentages(data);
 
     test("Should return correct tested lines", () => {
         assert(linesData.tested.includes(1));
@@ -288,7 +286,7 @@ suite("Change tested and untested lines index", () => {
     </html>`;
 
     test("Writing on one line should change arrays", () => {
-        let linesReport = pythonHandler.extractLinesPercentages(data);
+        let linesReport = new PythonHandler().extractLinesPercentages(data);
         assert(linesReport.tested.includes(2));
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 2, 2);
         assert(!linesReport.notTested.includes(2));
@@ -300,7 +298,7 @@ suite("Change tested and untested lines index", () => {
     });
 
     test("Add at first line should move all lines", () => {
-        let linesReport = pythonHandler.extractLinesPercentages(data);
+        let linesReport = new PythonHandler().extractLinesPercentages(data);
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 1, 2);
         assert(!linesReport.notTested.includes(1));
         assert(!linesReport.tested.includes(1));
@@ -315,12 +313,12 @@ suite("Change tested and untested lines index", () => {
     });
 
     test("Handle impossible line change", () => {
-        let linesReport = pythonHandler.extractLinesPercentages(data);
+        let linesReport = new PythonHandler().extractLinesPercentages(data);
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 2, 1);
     });
 
     test("Changing middle line should move only some of the lines", () => {
-        let linesReport = pythonHandler.extractLinesPercentages(data);
+        let linesReport = new PythonHandler().extractLinesPercentages(data);
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 20, 21);
         assert(!linesReport.notTested.includes(20));
         assert(!linesReport.tested.includes(20));
@@ -336,7 +334,7 @@ suite("Change tested and untested lines index", () => {
     });
 
     test("Editing multiple lines should move multiple lines", () => {
-        let linesReport = pythonHandler.extractLinesPercentages(data);
+        let linesReport = new PythonHandler().extractLinesPercentages(data);
         linesReport = coverReportFunc.moveLinesPercentages(linesReport, 20, 26);
         assert(linesReport.notHandled.includes(20));
         assert(linesReport.notHandled.includes(21));

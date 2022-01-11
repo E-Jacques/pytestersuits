@@ -11,14 +11,11 @@ suite("Testing Test.appendTestToFile", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
     before(() => {
-        return new Promise<void>((resolve) => {
-            createDir(testDir).then(() => {
-                createFile(join(testDir, "test_first.py")).then(() => {
-                    createFile(join(testDir, "test_second.py"));
-                }).then(() => {
-                    resolve();
-                });
-            });
+        return new Promise<void>(async (resolve) => {
+            await createDir(testDir);
+            await createFile(join(testDir, "test_first.py"));
+            await createFile(join(testDir, "test_second.py"));
+            resolve();
         });
     });
 

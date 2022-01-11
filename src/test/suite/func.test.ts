@@ -67,10 +67,9 @@ suite("isDirectory", () => {
 	before(() => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
 
-		return new Promise<void>((resolve) => {
-			createTestDir(testDir, filenames, filenames).then(() => {
-				resolve();
-			});
+		return new Promise<void>(async (resolve) => {
+			await createTestDir(testDir, filenames, filenames);
+			resolve();
 		});
 	});
 
@@ -92,10 +91,9 @@ suite("getFileWithExtension", () => {
 	before(() => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
 
-		return new Promise<void>((resolve) => {
-			createTestDir(testDir, filenames, filenames).then(() => {
-				resolve();
-			});
+		return new Promise<void>(async (resolve) => {
+			await createTestDir(testDir, filenames, filenames);
+			resolve();
 		});
 	});
 

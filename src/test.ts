@@ -1,6 +1,12 @@
-import { accessSync, appendFile, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { accessSync, appendFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path = require("path");
 import { LanguageInterface } from "./extension_func/languageInterface";
+
+export type ChangeReport = {
+    content: string
+    encoding: "utf8" | "utf-8",
+    appendToFile: boolean
+};
 
 export class Test {
     constructor(private name: string, private file: string, private languageInterface: LanguageInterface, private suiteName: string | null = null) {}
@@ -23,11 +29,17 @@ export class Test {
 
     public fileContainsImport(): boolean {
         let data = readFileSync(this.file, "utf-8");
-        return data.includes(this.languageInterface.importLibraries);
+
+        for (let importLibraries of this.languageInterface.getImportLibraries()) {
+            if (data.includes(importLibraries)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private getImport () {
-        return this.languageInterface.importLibraries + "\n";
+        return this.languageInterface.getImportLibraries()[0] + "\n";
     }
 
     public importTestLibraryIfNeeded() {
@@ -44,16 +56,22 @@ export class Test {
         }
     }
 
-    public appendTestToFile() {
+    public appendFile (changeReport: ChangeReport): void {
+        if (changeReport.appendToFile) {
+            appendFileSync(this.file, changeReport.content, {encoding: changeReport.encoding});
+        } else {
+            writeFileSync(this.file, changeReport.content, {encoding: changeReport.encoding});
+        }
+    }
+
+    public appendTestToFile(): void {
         mkdirSync(path.parse(this.file).dir, {
             recursive: true
         });
         this.importTestLibraryIfNeeded();
 
-        let testString = this.languageInterface.getTestFormat(this.name, this.suiteName || "");
-
-        appendFile(this.file, testString, err => {
-            if (err) { console.error(err); }
-        });
+        let data = readFileSync(this.file, "utf-8");
+        let changeReport = this.languageInterface.getTestFormat(this.name, this.suiteName || "", data);
+        this.appendFile(changeReport);        
     }
 }

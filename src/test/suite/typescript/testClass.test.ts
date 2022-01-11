@@ -10,16 +10,13 @@ suite("Testing Test.appendToFile for javascript", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
     before(() => {
-        return new Promise<void>((resolve) => {
-            createDir(testDir).then(() => {
-                createFile(join(testDir, "testFirst.test.js")).then(async () => {
-                    await createFile(join(testDir, "testSecond.test.js"));
-                    await createFile(join(testDir, "testThird.test.js"));
-                    await createFile(join(testDir, "testFourth.test.js"));
-                }).then(() => {
-                    resolve();
-                });
-            });
+        return new Promise<void>(async (resolve) => {
+            await createDir(testDir);
+            await createFile(join(testDir, "testFirst.test.js"));
+            await createFile(join(testDir, "testSecond.test.js"));
+            await createFile(join(testDir, "testThird.test.js"));
+            await createFile(join(testDir, "testFourth.test.js"));
+            resolve();
         });
     });
 
@@ -41,9 +38,9 @@ suite("Testing Test.appendToFile for javascript", () => {
     test("Shouldn't add a suite into a suite", () => {
         const filename = join(testDir, "testSecond.test.js");
         let test = new Test("secondTest", filename, new TypescriptHandler(), "suite 2");
-        writeFileSync(filename, `import * as assert from "assert";
-
-suite("suite 2", () => {});`,
+        writeFileSync(filename,
+            "import * as assert from \"assert\";\n\n" +
+            "suite(\"suite 2\", () => {});",
             { encoding: "utf8" });
         test.appendTestToFile();
 

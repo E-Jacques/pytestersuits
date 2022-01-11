@@ -47,3 +47,7 @@ For the moment only python is handle (with pytest). But more will come ;)
 ### 2.1.0
 
 Pytestersuits can now handle Typescript for 'Add Test to File'.
+
+### 2.1.1
+
+Fix test issue with file.

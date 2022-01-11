@@ -14,8 +14,8 @@ type TestAddRegexGroup = {
 };
 
 export default class JavascriptHandler implements LanguageInterface, SuiteTester {
-    fileExtension = "js";
-    testFileExtension = "test.js";
+    fileExtension = "ts";
+    testFileExtension = "test.ts";
     importLibraries = [
         "import * as assert from \"assert\";",
         "import * as assert from 'assert';",

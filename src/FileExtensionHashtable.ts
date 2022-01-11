@@ -1,14 +1,14 @@
 import { LanguageInterface } from "./extension_func/languageInterface";
 import PythonHandler from "./extension_func/language/PythonHandler";
-import JavascriptHandler from "./extension_func/language/JavascriptHandler";
+import TypescriptHandler from "./extension_func/language/TypescriptHandler";
 
 interface HashTable {
-    [key: string]: typeof PythonHandler | typeof JavascriptHandler;
+    [key: string]: typeof PythonHandler | typeof TypescriptHandler;
 }
 
 let hashTable: HashTable = {};
 hashTable["py"] = PythonHandler;
-hashTable["js"] = JavascriptHandler;
+hashTable["ts"] = TypescriptHandler;
 
 export function getDefaultLanguage(): LanguageInterface {
     return new hashTable[Object.keys(hashTable)[0]]();

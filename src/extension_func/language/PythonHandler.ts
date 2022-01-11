@@ -3,11 +3,11 @@ import * as vscode from "vscode";
 import * as path from "path";
 import parse from "node-html-parser";
 import { addExtensionToEnd, camelCaseToPythonString, getFileWithExtension } from "../../func";
-import { Test } from "../../test";
+import { ChangeReport, Test } from "../../test";
 import { FileReport, LanguageInterface, LinesReport } from "../languageInterface";
 import { openDocumentToLine } from "../../vscodefunc";
 
-export class PythonHandler implements LanguageInterface {
+export default class PythonHandler implements LanguageInterface {
     public fileExtension = "py";
     public testFileExtension = "py";
     public importLibraries = "import pytest";
@@ -16,6 +16,10 @@ export class PythonHandler implements LanguageInterface {
         execSync("pytest --cov-report html --cov=" + dirpath, {
             cwd
         });
+    }
+
+    public getImportLibraries(): string[] {
+        return [this.importLibraries];
     }
 
     public normalizeStringToConvention(s: string): string {
@@ -59,11 +63,11 @@ export class PythonHandler implements LanguageInterface {
         return linesReport;
     }
 
-    public getTestFormat(testName: string): string {
+    public getTestFormat(testName: string, _suiteName: string, _data: string): ChangeReport {
         let testString = "";
         testString += "\n@pytest.mark.skip(reason=\"generated automaticly\")\n";
         testString += `def test_${testName}():\n\tpass\n`;
-        return testString;
+        return {content: testString, encoding: "utf-8", appendToFile: true};
     }
 
     public addTestToFile(rootPath: string): void {

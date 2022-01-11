@@ -8,9 +8,15 @@ pytestersuits is an extension that should be used to perform python test drivent
 You can add some tests to your python files. They will be automatically marked as todo.
 Select a file and a name to create this test.
 
-## Requirements
+## Language support
 
-Pytest need to be used to perform the different tests.
+### Add Test to File command
+- Python ✅
+- Typescript ✅
+
+### Coverage Report UI
+- Python ✅
+- Typescript ❌
 
 ## Release Notes
 
@@ -37,3 +43,7 @@ New you can provide any type of name (with or without '.py', even with part of i
 
 Refactoring the hole app the develop the extension for multiple languages.
 For the moment only python is handle (with pytest). But more will come ;)
+
+### 2.1.0
+
+Pytestersuits can now handle Typescript for 'Add Test to File'.

@@ -2,17 +2,33 @@ import { execSync } from "child_process";
 import * as path from "path";
 import * as vscode from "vscode";
 import { addExtensionToEnd, convertStringToCamelCase, getFileWithExtension } from "../../func";
-import { Test } from "../../test";
+import { ChangeReport, Test } from "../../test";
 import { openDocumentToLine } from "../../vscodefunc";
 import { FileReport, LanguageInterface, LinesReport } from "../languageInterface";
+import { SuiteTester } from "../suiteTester";
 
-export class JavascriptHandler implements LanguageInterface {
+type TestAddRegexGroup = {
+    before: string,
+    inside: string,
+    after: string
+};
+
+export class JavascriptHandler implements LanguageInterface, SuiteTester {
     fileExtension = "js";
     testFileExtension = "test.js";
-    importLibraries = "import * as assert from 'assert';";
+    importLibraries = [
+        "import * as assert from \"assert\";",
+        "import * as assert from 'assert';",
+        "import * as assert from 'assert'",
+        "import * as assert from \"assert\""
+    ];
 
     public normalizeStringToConvention(s: string): string {
         return convertStringToCamelCase(s);
+    }
+
+    public getImportLibraries(): string[] {
+        return this.importLibraries;
     }
 
     /**
@@ -42,8 +58,34 @@ export class JavascriptHandler implements LanguageInterface {
         });
     }
 
-    getTestFormat(testName: string, suiteName: string): string {
-        return `\ntest.todo('${testName}', () => {\n\t// write test here\n});\n`;
+    insertIntoSuite(data: string, testFormat: string, suiteName: string) {
+        const regex = new RegExp(`(?<before>.*)suite\\\(\\\"${suiteName}\\\",(?<inside>.*)}\\\);*(?<after>.*)`, "gsm");
+        const { before, inside, after } = regex.exec(data)?.groups as TestAddRegexGroup;
+
+        return before + `suite(\"${suiteName}\",${inside}${testFormat}
+});` + after;
+    }
+
+    containsSuite(data: string, suiteName: string): boolean {
+        let regex = new RegExp(`suite\\\(\\\"${suiteName}\\\",.*}\\\);*`, "s");
+        return regex.test(data);
+    }
+
+    getTestFormat(testName: string, suiteName: string, data: string): ChangeReport {
+        const testString = `\n\ttest.todo(\"${testName}\", () => {\n\t\t// TODO\n\t});\n`;
+        let res = data;
+
+        if (!this.containsSuite(data, suiteName)) {
+            res += `\nsuite("${suiteName}", () => {\n});`;
+        }
+
+        res = this.insertIntoSuite(res, testString, suiteName);
+
+        return {
+            content: res,
+            encoding: "utf-8",
+            appendToFile: false
+        };
     }
 
     private buildQuickPickPromise(compatibleFiles: string[]): Promise<string> {

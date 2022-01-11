@@ -112,6 +112,10 @@ export function camelCaseToPythonString(toTransform: string): string {
 }
 
 export function convertStringToCamelCase(toConvert: string): string {
+    if (toConvert.length === 0) {
+        return "";
+    }
+    
     const forbidChars = [" ", "_"];
     let correctToConvert = toConvert[0].toLowerCase() + toConvert.substring(1);
     let res = "";

@@ -13,7 +13,7 @@ type TestAddRegexGroup = {
     after: string
 };
 
-export class JavascriptHandler implements LanguageInterface, SuiteTester {
+export default class JavascriptHandler implements LanguageInterface, SuiteTester {
     fileExtension = "js";
     testFileExtension = "test.js";
     importLibraries = [

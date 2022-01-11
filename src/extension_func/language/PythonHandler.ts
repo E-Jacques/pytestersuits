@@ -7,7 +7,7 @@ import { ChangeReport, Test } from "../../test";
 import { FileReport, LanguageInterface, LinesReport } from "../languageInterface";
 import { openDocumentToLine } from "../../vscodefunc";
 
-export class PythonHandler implements LanguageInterface {
+export default class PythonHandler implements LanguageInterface {
     public fileExtension = "py";
     public testFileExtension = "py";
     public importLibraries = "import pytest";

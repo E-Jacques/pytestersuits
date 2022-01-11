@@ -1,8 +1,8 @@
+import { LanguageInterface } from "./extension_func/languageInterface";
+import { getDefaultLanguage, getLanguageFromExt } from "./FileExtensionHashtable";
 import { readFileSync } from "fs";
 import { parse } from "path";
 import * as vscode from "vscode";
-import { LanguageInterface } from "./extension_func/languageInterface";
-import { getDefaultLanguage, getLanguageFromExt } from "./FileExtensionHashtable";
 import { getAllFiles, getLineCount, getMostFrequent } from "./func";
 
 export function openDocumentToLine(filepath: string, line: number) {
@@ -30,6 +30,7 @@ export function openDocumentToLine(filepath: string, line: number) {
 export function getCurrentCodeLanguage(): LanguageInterface {
     let filename = vscode.window.activeTextEditor?.document.fileName;
     let ext;
+    
     if (!filename) {
         const rootPath = getRootPath();
         if (rootPath === null) {
@@ -39,8 +40,8 @@ export function getCurrentCodeLanguage(): LanguageInterface {
         let files: string[] = getAllFiles(rootPath);
         ext = getMostFrequent(files.map(f => parse(f).ext)) || "";
     } else {
-        ext = parse(filename).ext;
-    }
+        ext = parse(filename).ext.substring(1);
+    }    
 
     return getLanguageFromExt(ext);
 }

@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import * as coverReportFunc from "../../../extension_func/coverageReport/func";
-import { PythonHandler } from "../../../extension_func/language/PythonHandler";
+import PythonHandler from "../../../extension_func/language/PythonHandler";
 
 const pythonHandler = new PythonHandler();
 

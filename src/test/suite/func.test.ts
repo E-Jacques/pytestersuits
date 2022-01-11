@@ -185,7 +185,7 @@ suite("Testing convertStringToCamelCase...", () => {
 		assert.strictEqual(func.convertStringToCamelCase("camel"), "camel");
 	});
 
-	test("Should return an empty string if on eis provided in input", () => {
+	test("Should return an empty string if one is provided in input", () => {
 		assert.strictEqual(func.convertStringToCamelCase("").length, 0);
 	});
 

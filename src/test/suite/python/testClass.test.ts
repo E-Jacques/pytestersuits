@@ -3,7 +3,7 @@ import { readFile, readFileSync, writeFileSync } from "fs";
 import { before } from "mocha";
 import { join } from "path";
 import { createDir, createFile } from "../index";
-import { PythonHandler } from "../../../extension_func/language/PythonHandler";
+import PythonHandler from "../../../extension_func/language/PythonHandler";
 
 import { Test } from "../../../test";
 

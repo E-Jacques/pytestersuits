@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { before } from "mocha";
 import { join } from "path";
 import { createDir, createFile } from "..";
-import { JavascriptHandler } from "../../../extension_func/language/JavascriptHandler";
+import JavascriptHandler from "../../../extension_func/language/JavascriptHandler";
 import { Test } from "../../../test";
 
 suite("Testing Test.appendToFile for javascript", () => {

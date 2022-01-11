@@ -62,14 +62,13 @@ suite("Testing Test.importTestLibraryIfNeeded", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
     before(() => {
-        return new Promise<void>((resolve) => {
-            setTimeout(() => {
-                createDir(testDir);
-                createFile(join(testDir, "test_third.py"));
-                resolve();
-            }, 200);
+        return new Promise<void>(async (resolve) => {
+            await createDir(testDir);
+            await createFile(join(testDir, "test_third.py"));
+            resolve();
         });
     });
+
     test("Correctly write to file", () => {
         const filename = join(testDir, "test_third.py");
         const testName = "first";
@@ -104,13 +103,11 @@ suite("Testing Test.fileContainsImport", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
     before(() => {
-        return new Promise<void>((resolve) => {
-            setTimeout(() => {
-                createDir(testDir);
-                createFile(join(testDir, "test_fourth.py"));
-                createFile(join(testDir, "test_fifth.py"));
-                resolve();
-            }, 200);
+        return new Promise<void>(async (resolve) => {
+            await createDir(testDir);
+            await createFile(join(testDir, "test_fourth.py"));
+            await createFile(join(testDir, "test_fifth.py"));
+            resolve();
         });
     });
     test("Should detect 'import pytest'", () => {

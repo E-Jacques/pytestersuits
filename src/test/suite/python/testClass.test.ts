@@ -71,27 +71,27 @@ suite("Testing Test.importTestLibraryIfNeeded", () => {
         const testName = "first";
 
         let test = new Test(testName, filename, new PythonHandler());
-        writeFileSync(filename, `import trucmuch
-        from test import func
+        writeFileSync(filename, "import trucmuch\n" +
+            "from test import func\n\n" +
 
-        def test_func():
-            assert(func(5) == 0)
-            assert(func(12) == 2)
-            
-        def test_func2():
-            assert(func(3) == -62)`);
+            "def test_func():\n" +
+            "\tassert(func(5) == 0)\n" +
+            "\tassert(func(12) == 2)\n\n" +
+
+            "def test_func2():\n" +
+            "\tassert(func(3) == -62)");
         test.importTestLibraryIfNeeded();
         let data = readFileSync(filename, "utf-8");
-        assert.strictEqual(data, `import pytest
-import trucmuch
-        from test import func
+        assert.strictEqual(data, "import pytest\n" +
+            "import trucmuch\n" +
+            "from test import func\n\n" +
 
-        def test_func():
-            assert(func(5) == 0)
-            assert(func(12) == 2)
-            
-        def test_func2():
-            assert(func(3) == -62)`);
+            "def test_func():\n" +
+            "\tassert(func(5) == 0)\n" +
+            "\tassert(func(12) == 2)\n\n" +
+
+            "def test_func2():\n" +
+            "\tassert(func(3) == -62)");
 
     });
 });
@@ -129,24 +129,26 @@ suite("Testing Test.fileContainsImport", () => {
         writeFileSync(filename, "");
         assert(!test.fileContainsImport());
 
-        writeFileSync(filename, `def func(x: int) -> int:
-        if x == 3:
-            return x - 65
-        elif x % 8 == 7:
-            return 12
-        else: 
-            return x % 5`);
+        writeFileSync(filename,
+            "def func(x: int) -> int:\n" +
+            "\tif x == 3:\n" +
+            "\t\treturn x - 65\n" +
+            "\telif x % 8 == 7:\n" +
+            "\t\treturn 12\n" +
+            "\telse:\n" +
+            "\t\treturn x % 5\n");
         assert(!test.fileContainsImport());
 
-        writeFileSync(filename, `import trucmuch
-        from test import func
+        writeFileSync(filename,
+            "import trucmuch\n" +
+            "from test import func\n\n" +
 
-        def test_func():
-            assert(func(5) == 0)
-            assert(func(12) == 2)
-            
-        def test_func2():
-            assert(func(3) == -62)`);
+            "def test_func():\n" +
+            "\tassert(func(5) == 0)\n" +
+            "\tassert(func(12) == 2)\n\n" +
+
+            "def test_func2():\n" +
+            "\tassert(func(3) == -62)");
         assert(!test.fileContainsImport());
     });
 });

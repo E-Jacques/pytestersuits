@@ -11,12 +11,12 @@ Select a file and a name to create this test.
 ## Language support
 
 ### Add Test to File command
-- Python ✅
-- Typescript ✅
+- Pytest (Python) ✅
+- Vscode Extension Test Suit (Typescript) ✅
 
 ### Coverage Report UI
-- Python ✅
-- Typescript ❌
+- Pytest (Python) ✅
+- Vscode Extension Test Suit (Typescript) ❌
 
 ## Release Notes
 
@@ -51,3 +51,8 @@ Pytestersuits can now handle Typescript for 'Add Test to File'.
 ### 2.1.1
 
 Fix test issue with file.
+
+### 2.2.0
+
+Refactor the code to handle multiple libraries instead of only one per language. <br>
+Implement `pytest` for python and `vscode extension test suit` for typescript.

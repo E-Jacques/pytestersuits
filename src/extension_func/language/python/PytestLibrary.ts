@@ -1,16 +1,19 @@
 import { execSync } from "child_process";
-import * as vscode from "vscode";
-import * as path from "path";
 import parse from "node-html-parser";
-import { addExtensionToEnd, camelCaseToPythonString, getFileWithExtension } from "../../func";
-import { ChangeReport, Test } from "../../test";
-import { FileReport, LanguageInterface, LinesReport } from "../languageInterface";
-import { openDocumentToLine } from "../../vscodefunc";
+import { addExtensionToEnd, getFileWithExtension } from "../../../func";
+import { ChangeReport, Test } from "../../../test";
+import { FileReport, LinesReport } from "../../languageInterface";
+import { LibraryInterface } from "../../libraryInterface";
+import PythonHandler from "./PythonHandler";
+import * as vscode from "vscode";
+import { openDocumentToLine } from "../../../vscodefunc";
+import * as path from "path";
 
-export default class PythonHandler implements LanguageInterface {
-    public fileExtension = "py";
-    public testFileExtension = "py";
+export class Pytest implements LibraryInterface {
     public importLibraries = "import pytest";
+    public name = "pytest";
+
+    constructor(public parent: PythonHandler) {}
 
     public runCoverageReport(dirpath: string, cwd: string): void {
         execSync("pytest --cov-report html --cov=" + dirpath, {
@@ -20,10 +23,6 @@ export default class PythonHandler implements LanguageInterface {
 
     public getImportLibraries(): string[] {
         return [this.importLibraries];
-    }
-
-    public normalizeStringToConvention(s: string): string {
-        return camelCaseToPythonString(s);
     }
 
     public extractFilesPercentages(htmlData: string): FileReport {
@@ -67,11 +66,11 @@ export default class PythonHandler implements LanguageInterface {
         let testString = "";
         testString += "\n@pytest.mark.skip(reason=\"generated automaticly\")\n";
         testString += `def test_${testName}():\n\tpass\n`;
-        return {content: testString, encoding: "utf-8", appendToFile: true};
+        return { content: testString, encoding: "utf-8", appendToFile: true };
     }
 
     public addTestToFile(rootPath: string): void {
-        let compatibleFiles = getFileWithExtension(rootPath, this.testFileExtension);
+        let compatibleFiles = getFileWithExtension(rootPath, this.parent.testFileExtension);
         let test = new Test("", "", this);
         let quickPickPromise = new Promise<string>(resolve => {
             const quickPick = vscode.window.createQuickPick();
@@ -83,8 +82,8 @@ export default class PythonHandler implements LanguageInterface {
                     if (quickPick.value === "") {
                         quickPick.items = compatibleFiles.map(s => ({ label: s, detail: s + " file" }));
                     } else {
-                        let camelCaseValue = this.normalizeStringToConvention(quickPick.value);
-                        let fileWithExt = addExtensionToEnd(camelCaseValue, this.testFileExtension);
+                        let camelCaseValue = this.parent.normalizeStringToConvention(quickPick.value);
+                        let fileWithExt = addExtensionToEnd(camelCaseValue, this.parent.testFileExtension);
 
                         quickPick.items = [{
                             label: quickPick.value,
@@ -97,9 +96,9 @@ export default class PythonHandler implements LanguageInterface {
             quickPick.onDidAccept(() => {
                 let { label } = quickPick.activeItems[0];
 
-                if (path.parse(label).ext !== this.testFileExtension) {
+                if (path.parse(label).ext !== this.parent.testFileExtension) {
                     let labelName = path.parse(label).name;
-                    label = path.join(path.parse(label).dir, addExtensionToEnd(labelName, this.testFileExtension));
+                    label = path.join(path.parse(label).dir, addExtensionToEnd(labelName, this.parent.testFileExtension));
                 }
                 resolve(label);
                 quickPick.hide();
@@ -114,7 +113,7 @@ export default class PythonHandler implements LanguageInterface {
                 return;
             } else {
                 if (!compatibleFiles.includes(value)) {
-                    value = this.normalizeStringToConvention(value);
+                    value = this.parent.normalizeStringToConvention(value);
                 }
 
                 test.setFile(path.join(rootPath, value));
@@ -126,7 +125,7 @@ export default class PythonHandler implements LanguageInterface {
                     value = "";
                 }
 
-                return this.normalizeStringToConvention(value);
+                return this.parent.normalizeStringToConvention(value);
             }).then(normalizedStringValue => {
                 test.setName(normalizedStringValue);
                 test.appendTestToFile();
@@ -136,4 +135,4 @@ export default class PythonHandler implements LanguageInterface {
             });
         });
     }
-} 
+}

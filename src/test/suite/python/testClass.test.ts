@@ -3,9 +3,10 @@ import { readFile, readFileSync, writeFileSync } from "fs";
 import { before } from "mocha";
 import { join } from "path";
 import { createDir, createFile } from "../index";
-import PythonHandler from "../../../extension_func/language/PythonHandler";
+import {Pytest} from "../../../extension_func/language/python/PytestLibrary";
 
 import { Test } from "../../../test";
+import PythonHandler from "../../../extension_func/language/python/PythonHandler";
 
 suite("Testing Test.appendTestToFile", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
@@ -23,7 +24,7 @@ suite("Testing Test.appendTestToFile", () => {
         const filename = join(testDir, "test_first.py");
         const testName = "first";
 
-        let test = new Test(testName, filename, new PythonHandler());
+        let test = new Test(testName, filename, new Pytest(new PythonHandler()));
 
         writeFileSync(filename, "");
         test.appendTestToFile();
@@ -40,8 +41,8 @@ suite("Testing Test.appendTestToFile", () => {
         const testName1 = "first";
         const testName2 = "second";
 
-        let test1 = new Test(testName1, filename, new PythonHandler());
-        let test2 = new Test(testName2, filename, new PythonHandler());
+        let test1 = new Test(testName1, filename, new Pytest(new PythonHandler()));
+        let test2 = new Test(testName2, filename, new Pytest(new PythonHandler()));
 
         writeFileSync(filename, "");
 
@@ -70,7 +71,7 @@ suite("Testing Test.importTestLibraryIfNeeded", () => {
         const filename = join(testDir, "test_third.py");
         const testName = "first";
 
-        let test = new Test(testName, filename, new PythonHandler());
+        let test = new Test(testName, filename, new Pytest(new PythonHandler()));
         writeFileSync(filename, "import trucmuch\n" +
             "from test import func\n\n" +
 
@@ -111,7 +112,7 @@ suite("Testing Test.fileContainsImport", () => {
         const filename = join(testDir, "test_fourth.py");
         const testName = "first";
 
-        let test = new Test(testName, filename, new PythonHandler());
+        let test = new Test(testName, filename, new Pytest(new PythonHandler()));
 
         writeFileSync(filename, "import pytest");
         assert(test.fileContainsImport());
@@ -124,7 +125,7 @@ suite("Testing Test.fileContainsImport", () => {
         const filename = join(testDir, "test_fifth.py");
         const testName = "first";
 
-        let test = new Test(testName, filename, new PythonHandler());
+        let test = new Test(testName, filename, new Pytest(new PythonHandler()));
 
         writeFileSync(filename, "");
         assert(!test.fileContainsImport());

@@ -4,8 +4,9 @@ import * as coverageReportFunc from "./func";
 import { accessSync, readdirSync, readFileSync } from "fs";
 import { isExtension } from "../../func";
 import { join, relative } from "path";
-import { FileReport, LanguageInterface, LinesReport } from "../languageInterface";
+import { FileReport, LinesReport } from "../languageInterface";
 import { getRootPath } from "../../vscodefunc";
+import { LibraryInterface } from "../libraryInterface";
 
 type FullCoverageReport = {
     fileReport: FileReport,
@@ -18,7 +19,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
     private _onDidChangeTreeData: vscode.EventEmitter<CoverageReport | undefined | void> = new vscode.EventEmitter<CoverageReport | undefined | void>();
     readonly onDidChangeTreeData: vscode.Event<CoverageReport | undefined | void> = this._onDidChangeTreeData.event;
 
-    constructor(private coveragePath: string, private languageInterface: LanguageInterface) {
+    constructor(private coveragePath: string, private libraryInterface: LibraryInterface) {
         this.coverageReportList = [];
         this.buildCoverageReportList();
     }
@@ -68,8 +69,8 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
             let filepath = join(this.coveragePath, file);
             let data = readFileSync(filepath, "utf-8");
 
-            let fileReport = this.languageInterface.extractFilesPercentages(data);
-            let linesReport: LinesReport = this.languageInterface.extractLinesPercentages(data);
+            let fileReport = this.libraryInterface.extractFilesPercentages(data);
+            let linesReport: LinesReport = this.libraryInterface.extractLinesPercentages(data);
             this.coverageReportList.push({
                 fileReport,
                 linesReport

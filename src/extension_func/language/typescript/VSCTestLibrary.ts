@@ -1,11 +1,13 @@
 import { execSync } from "child_process";
-import * as path from "path";
+import { ChangeReport, Test } from "../../../test";
+import { FileReport, LanguageInterface, LinesReport } from "../../languageInterface";
+import { LibraryInterface } from "../../libraryInterface";
+import { SuiteTester } from "../../suiteTester";
+import TypescriptHandler from "./TypescriptHandler";
 import * as vscode from "vscode";
-import { addExtensionToEnd, convertStringToCamelCase, getFileWithExtension } from "../../func";
-import { ChangeReport, Test } from "../../test";
-import { openDocumentToLine } from "../../vscodefunc";
-import { FileReport, LanguageInterface, LinesReport } from "../languageInterface";
-import { SuiteTester } from "../suiteTester";
+import * as path from "path";
+import { addExtensionToEnd, getFileWithExtension } from "../../../func";
+import { openDocumentToLine } from "../../../vscodefunc";
 
 type TestAddRegexGroup = {
     before: string,
@@ -13,19 +15,16 @@ type TestAddRegexGroup = {
     after: string
 };
 
-export default class JavascriptHandler implements LanguageInterface, SuiteTester {
-    fileExtension = "ts";
-    testFileExtension = "test.ts";
-    importLibraries = [
+export class VSCTestLibrary implements LibraryInterface, SuiteTester {
+    public name = "VsCode Extension Test suite";
+    public importLibraries = [
         "import * as assert from \"assert\";",
         "import * as assert from 'assert';",
         "import * as assert from 'assert'",
         "import * as assert from \"assert\""
     ];
 
-    public normalizeStringToConvention(s: string): string {
-        return convertStringToCamelCase(s);
-    }
+    constructor (public parent: TypescriptHandler) {};
 
     public getImportLibraries(): string[] {
         return this.importLibraries;
@@ -99,8 +98,8 @@ export default class JavascriptHandler implements LanguageInterface, SuiteTester
                     if (quickPick.value === "") {
                         quickPick.items = compatibleFiles.map(s => ({ label: s, detail: s + " file" }));
                     } else {
-                        let camelCaseValue = this.normalizeStringToConvention(quickPick.value);
-                        let fileWithExt = addExtensionToEnd(camelCaseValue, this.testFileExtension);
+                        let camelCaseValue = this.parent.normalizeStringToConvention(quickPick.value);
+                        let fileWithExt = addExtensionToEnd(camelCaseValue, this.parent.testFileExtension);
 
                         quickPick.items = [{
                             label: quickPick.value,
@@ -113,9 +112,9 @@ export default class JavascriptHandler implements LanguageInterface, SuiteTester
             quickPick.onDidAccept(() => {
                 let { label } = quickPick.activeItems[0];
 
-                if (path.parse(label).ext !== this.testFileExtension) {
+                if (path.parse(label).ext !== this.parent.testFileExtension) {
                     let labelName = path.parse(label).name;
-                    label = path.join(path.parse(label).dir, addExtensionToEnd(labelName, this.testFileExtension));
+                    label = path.join(path.parse(label).dir, addExtensionToEnd(labelName, this.parent.testFileExtension));
                 }
                 resolve(label);
                 quickPick.hide();
@@ -159,7 +158,7 @@ export default class JavascriptHandler implements LanguageInterface, SuiteTester
                 return;
             } else {
                 if (!compatibleFiles.includes(value)) {
-                    value = this.normalizeStringToConvention(value);
+                    value = this.parent.normalizeStringToConvention(value);
                 }
 
                 test.setFile(path.join(rootPath, value));
@@ -171,7 +170,7 @@ export default class JavascriptHandler implements LanguageInterface, SuiteTester
 
     addTestToFile(rootPath: string): void {
         let test = new Test("", "", this);
-        let compatibleFiles = getFileWithExtension(rootPath, this.testFileExtension);
+        let compatibleFiles = getFileWithExtension(rootPath, this.parent.testFileExtension);
         let quickPickPromise = this.buildQuickPickPromise(compatibleFiles);
 
         quickPickPromise.then((value: string) => {
@@ -180,7 +179,7 @@ export default class JavascriptHandler implements LanguageInterface, SuiteTester
                 return;
             } else {
                 if (!compatibleFiles.includes(value)) {
-                    value = this.normalizeStringToConvention(value);
+                    value = this.parent.normalizeStringToConvention(value);
                 }
 
                 test.setFile(path.join(rootPath, value));
@@ -192,7 +191,7 @@ export default class JavascriptHandler implements LanguageInterface, SuiteTester
                     value = "";
                 }
 
-                return this.normalizeStringToConvention(value);
+                return this.parent.normalizeStringToConvention(value);
             }).then(normalizedStringValue => {
                 test.setName(normalizedStringValue);
                 test.appendTestToFile();

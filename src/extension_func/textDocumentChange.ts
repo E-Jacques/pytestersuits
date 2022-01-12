@@ -27,8 +27,10 @@ export function handleTextDocumentSaveEvent(textDocument: TextDocument, coverage
     if (rootPath === null) {
         return;
     }
-     
-    languageInterface.runCoverageReport(dirpath, rootPath);
+    
+    let libraryInterface = languageInterface.getDefaultTestingLibrary();
+    if (!libraryInterface) { return; }
+    libraryInterface.runCoverageReport(dirpath, rootPath);
 
     coverageReportTree.buildCoverageReportList();
     coverageReportTree.reload();

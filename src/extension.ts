@@ -14,8 +14,10 @@ export function activate(context: vscode.ExtensionContext) {
 	const rootPath = getRootPath();
 
 	vscode.commands.registerCommand('pytestersuits.addTestToFile', () => addTestToFile(rootPath, getCurrentCodeLanguage()));
+	let defaultLibrary = getCurrentCodeLanguage().getDefaultTestingLibrary();
+	if (!defaultLibrary) {return; }
 	const coverageReportProvider = new CoverageReportProvider(
-		join((vscode.workspace.workspaceFolders || [{ uri: { path: "." } }])[0].uri.path, "htmlcov"), getCurrentCodeLanguage());
+		join((vscode.workspace.workspaceFolders || [{ uri: { path: "." } }])[0].uri.path, "htmlcov"), defaultLibrary);
 	vscode.window.createTreeView("coverReport", {
 		treeDataProvider: coverageReportProvider
 	});

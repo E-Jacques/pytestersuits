@@ -1,4 +1,6 @@
+import * as vscode from "vscode";
 import { ChangeReport } from "../test";
+import { LibraryInterface } from "./libraryInterface";
 
 export type FileReport = {
     filename: string,
@@ -11,51 +13,33 @@ export type LinesReport = {
     notHandled: number[]
 };
 
-export interface LanguageInterface {
-    fileExtension: string;
-    testFileExtension: string;
-
-    /**
-     * List of the different ways to import the libraries corresponding to the Language.
-     * The first one will be used to import when necessary.
-     */
-    importLibraries: string[] | string;
+export abstract class LanguageInterface {
+    public fileExtension: string = "";
+    public testFileExtension: string = "";
+    public languageLibrary: LibraryInterface[] = [];
 
     /**
      * Transform a string to it's equivalent in the good language convention.
      * ie. python_case for python, camelCase for javascript, etc...
      */
-    normalizeStringToConvention (s: string): string
+    abstract normalizeStringToConvention (s: string): string;
 
+    selectRightLIbrary(rootPath: string): void {
+        vscode.window.showQuickPick(
+            this.languageLibrary.map(lib => ({ label: lib.name, value: lib }))
+        ).then(res => {
+            let lib = res?.value;
+            if (!lib) { console.error("Can't pick right library."); return; }
+            lib.addTestToFile(rootPath);
+        });
+    }
 
-    /**
-     * Get line by line coverage from html Data
-     */
-    extractLinesPercentages(htmlData: string): LinesReport
+    getDefaultTestingLibrary (): LibraryInterface | null {
+        if (this.languageLibrary.length === 0) {
+            vscode.window.showWarningMessage("Can't load a default library ...");
+            return null;
+        }
 
-    /**
-     * Get filename and percent from html data
-     */
-    extractFilesPercentages(htmlData: string): FileReport
-
-    /**
-     * Run the coverage report to generate the html files
-     */
-    runCoverageReport(dirpath: string, cwd: string): void
-
-    /**
-     * Create a test 
-     */
-     getTestFormat (testName: string, suiteName: string, data: string): ChangeReport
-
-    /**
-     * vscode implementation of commande 'Add Test to File'.
-     */
-    addTestToFile (rootPath: string): void
-
-    /**
-     * Return a list of the differents way to import a library.
-     * Convert string to length one array.
-     */
-    getImportLibraries (): string[];
+        return this.languageLibrary[0];
+    }
 };

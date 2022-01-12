@@ -1,6 +1,7 @@
 import { accessSync, appendFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path = require("path");
 import { LanguageInterface } from "./extension_func/languageInterface";
+import { LibraryInterface } from "./extension_func/libraryInterface";
 
 export type ChangeReport = {
     content: string
@@ -9,7 +10,7 @@ export type ChangeReport = {
 };
 
 export class Test {
-    constructor(private name: string, private file: string, private languageInterface: LanguageInterface, private suiteName: string | null = null) {}
+    constructor(private name: string, private file: string, private libraryInterface: LibraryInterface, private suiteName: string | null = null) {}
 
     public setFile(file: string) {
         this.file = file;
@@ -30,7 +31,7 @@ export class Test {
     public fileContainsImport(): boolean {
         let data = readFileSync(this.file, "utf-8");
 
-        for (let importLibraries of this.languageInterface.getImportLibraries()) {
+        for (let importLibraries of this.libraryInterface.getImportLibraries()) {
             if (data.includes(importLibraries)) {
                 return true;
             }
@@ -39,7 +40,7 @@ export class Test {
     }
 
     private getImport () {
-        return this.languageInterface.getImportLibraries()[0] + "\n";
+        return this.libraryInterface.getImportLibraries()[0] + "\n";
     }
 
     public importTestLibraryIfNeeded() {
@@ -71,7 +72,7 @@ export class Test {
         this.importTestLibraryIfNeeded();
 
         let data = readFileSync(this.file, "utf-8");
-        let changeReport = this.languageInterface.getTestFormat(this.name, this.suiteName || "", data);
+        let changeReport = this.libraryInterface.getTestFormat(this.name, this.suiteName || "", data);
         this.appendFile(changeReport);        
     }
 }

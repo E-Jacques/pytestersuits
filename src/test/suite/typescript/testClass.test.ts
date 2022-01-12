@@ -3,7 +3,8 @@ import { readFileSync, writeFileSync } from "fs";
 import { before } from "mocha";
 import { join } from "path";
 import { createDir, createFile } from "..";
-import TypescriptHandler from "../../../extension_func/language/TypescriptHandler";
+import TypescriptHandler from "../../../extension_func/language/typescript/TypescriptHandler";
+import { VSCTestLibrary } from "../../../extension_func/language/typescript/VSCTestLibrary";
 import { Test } from "../../../test";
 
 suite("Testing Test.appendToFile for javascript", () => {
@@ -22,7 +23,7 @@ suite("Testing Test.appendToFile for javascript", () => {
 
     test("Should add the suite if not provided", () => {
         const filename = join(testDir, "testFirst.test.js");
-        let test = new Test("firstTest", filename, new TypescriptHandler(), "First suite");
+        let test = new Test("firstTest", filename, new VSCTestLibrary(new TypescriptHandler()), "First suite");
         writeFileSync(filename, "", "utf-8");
         test.appendTestToFile();
         const shouldBe = "import * as assert from \"assert\";\n\n" +
@@ -37,7 +38,7 @@ suite("Testing Test.appendToFile for javascript", () => {
 
     test("Shouldn't add a suite into a suite", () => {
         const filename = join(testDir, "testSecond.test.js");
-        let test = new Test("secondTest", filename, new TypescriptHandler(), "suite 2");
+        let test = new Test("secondTest", filename, new VSCTestLibrary(new TypescriptHandler()), "suite 2");
         writeFileSync(filename,
             "import * as assert from \"assert\";\n\n" +
             "suite(\"suite 2\", () => {});",
@@ -56,7 +57,7 @@ suite("Testing Test.appendToFile for javascript", () => {
 
     test("Shouldn't override other test when adding inside existing suite", () => {
         const filename = join(testDir, "testThird.test.js");
-        let test = new Test("thirdTest", filename, new TypescriptHandler(), "suite 2");
+        let test = new Test("thirdTest", filename, new VSCTestLibrary(new TypescriptHandler()), "suite 2");
         writeFileSync(filename, "import * as assert from \"assert\";\n\n" +
             "suite(\"suite 2\", () => {\n" +
             "\ttest(\"secondTest\", () => {\n" +
@@ -81,7 +82,7 @@ suite("Testing Test.appendToFile for javascript", () => {
 
     test("Should keep existing suite", () => {
         const filename = join(testDir, "testFourth.test.js");
-        let test = new Test("forth Test", filename, new TypescriptHandler(), "second");
+        let test = new Test("forth Test", filename, new VSCTestLibrary(new TypescriptHandler()), "second");
         writeFileSync(filename, "import * as assert from \"assert\";\n\n" +
             "suite(\"first\", () => {\n" +
             "\ttest(\"secondTest\", () => {\n" +

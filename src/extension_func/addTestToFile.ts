@@ -9,5 +9,5 @@ export function addTestToFile(rootPath: string | null, languageInterface: Langua
         return;
     }
     
-    languageInterface.addTestToFile(rootPath);    
+    languageInterface.selectRightLIbrary(rootPath);    
 }

@@ -15,6 +15,37 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Pytestersuits",
+      "properties": {
+        "pytestersuits.pythonDefaultTestLibrary": {
+          "description": "The library you will use, when working with Python, to add test and vizualise your coverage report",
+          "type": "string",
+          "default": "Choose each time",
+          "enum": [
+            "Choose each time",
+            "pytest"
+          ],
+          "enumDescriptions": [
+            "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible.",
+            "You will use pytest as python test library."
+          ]
+        },
+        "pytestersuits.typescriptDefaultTestLibrary": {
+          "description": "The library you will, when working with Typescript, use to add test and vizualise your coverage report",
+          "type": "string",
+          "default": "Choose each time",
+          "enum": [
+            "Choose each time",
+            "Vscode Extension Test suit"
+          ],
+          "enumDescriptions": [
+            "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible.",
+            "You will use 'Vscode Extension Test suit' as Typescript test library."
+          ]
+        }
+      }
+    },
     "commands": [
       {
         "command": "pytestersuits.addTestToFile",

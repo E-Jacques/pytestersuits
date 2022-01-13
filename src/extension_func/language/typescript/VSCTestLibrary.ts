@@ -16,7 +16,7 @@ type TestAddRegexGroup = {
 };
 
 export class VSCTestLibrary implements LibraryInterface, SuiteTester {
-    public name = "VsCode Extension Test suite";
+    public name = "Vscode Extension Test suit";
     public importLibraries = [
         "import * as assert from \"assert\";",
         "import * as assert from 'assert';",

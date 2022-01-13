@@ -19,7 +19,6 @@ export default class PythonHandler extends LanguageInterface {
         let config = vscode.workspace.getConfiguration("pytestersuits");
         let value = config.get<string>("pythonDefaultTestLibrary");
         if (!value) { return null; }
-        console.log(value);
 
         let idx = this.languageLibrary.map(a => a.name).indexOf(value);
         if (idx === -1) { return null; }

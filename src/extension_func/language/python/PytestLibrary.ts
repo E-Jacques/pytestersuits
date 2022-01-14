@@ -95,11 +95,12 @@ export class Pytest implements LibraryInterface {
     }
 
     private getTestNames(testList: TestList) {
-        let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Names of your tests (pass multiple tests by delimitating them with ';')" });
+        const delimiter = vscode.workspace.getConfiguration("pytestersuits").get<string>("separator") || ";";
+        let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Names of your tests (pass multiple tests by delimitating them with '" + delimiter + "')" });
         testNameInputBox.then(value => {
             if (!value) { return; }
 
-            testList.extractTestsFromString(value, ";", this.parent.normalizeStringToConvention);
+            testList.extractTestsFromString(value, delimiter, this.parent.normalizeStringToConvention);
             testList.addTestsToFile();
             openDocumentToLine(testList.getFile(), -1);
 

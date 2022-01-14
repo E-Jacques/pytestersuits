@@ -127,14 +127,16 @@ export class VSCTestLibrary implements LibraryInterface, SuiteTester {
     }
 
     private getTestName(testList: TestList): void {
-        let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Names of your tests (pass multiple tests by delimitating them with ';')" });
+        const delimiter = vscode.workspace.getConfiguration("pytestersuits").get<string>("separator") || ";";
+        let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Names of your tests (pass multiple tests by delimitating them with '"+ delimiter +"')" });
         testNameInputBox.then(testName => {
             if (!testName) {
                 vscode.window.showErrorMessage("You need to provide a test name.");
                 return;
             }
 
-            testList.extractTestsFromString(testName, ";", (s: string) => s);
+
+            testList.extractTestsFromString(testName, delimiter, (s: string) => s);
             testList.addTestsToFile();
             openDocumentToLine(testList.getFile(), -1);
 

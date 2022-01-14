@@ -47,7 +47,7 @@ export class TestList {
 
     /**
      * Don't use !
-     * For test purpuses only.
+     * For test purposes only.
      */
     public getStringAt (idx: number): string {
         return this.testList[idx].toString();

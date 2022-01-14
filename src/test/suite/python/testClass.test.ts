@@ -109,6 +109,7 @@ suite("Testing Test.fileContainsImport", () => {
             resolve();
         });
     });
+    
     test("Should detect 'import pytest'", () => {
         const filename = join(testDir, "test_fourth.py");
         const testName = "first";

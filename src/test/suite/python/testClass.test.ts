@@ -190,7 +190,7 @@ suite("Testing TestList class for pytest", () => {
         testList.addTestsToFile();
 
 
-        const shouldBe = `import pytest\n\n@pytest.mark.skip(reason="generated automaticly")\ndef test_test1():\n\tpass\n\n@pytest.mark.skip(reason="generated automaticly")\ndef test_test2():\n\tpass\n`
+        const shouldBe = `import pytest\n\n@pytest.mark.skip(reason="generated automaticly")\ndef test_test1():\n\tpass\n\n@pytest.mark.skip(reason="generated automaticly")\ndef test_test2():\n\tpass\n`;
 
         assert.strictEqual(readFileSync(filename, "utf-8"), shouldBe);
     });

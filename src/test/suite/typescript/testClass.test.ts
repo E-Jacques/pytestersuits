@@ -11,13 +11,14 @@ import { TestList } from "../../../testingClass/testList";
 suite("Testing Test.appendToFile for javascript", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(async (done) => {
-        await createDir(testDir);
-        await createFile(join(testDir, "testFirst.test.js"));
-        await createFile(join(testDir, "testSecond.test.js"));
-        await createFile(join(testDir, "testThird.test.js"));
-        await createFile(join(testDir, "testFourth.test.js"));
-        done();
+    before((done) => {
+        createDir(testDir).then(async () => {
+            await createFile(join(testDir, "testFirst.test.js"));
+            await createFile(join(testDir, "testSecond.test.js"));
+            await createFile(join(testDir, "testThird.test.js"));
+            await createFile(join(testDir, "testFourth.test.js"));
+            done();
+        });
     });
 
     test("Should add the suite if not provided", () => {
@@ -110,11 +111,12 @@ suite("Testing Test.appendToFile for javascript", () => {
 suite("Testing TestList class for VSCE test suit", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(async (done) => {
-        await createDir(testDir);
-        await createFile(join(testDir, "testFifth.test.js"));
-        await createFile(join(testDir, "testSixth.test.js"));
-        done();
+    before((done) => {
+        createDir(testDir).then(async () => {
+            createFile(join(testDir, "testFifth.test.js"));
+            createFile(join(testDir, "testSixth.test.js"));
+            done();
+        });
     });
 
     test("Should do the same with one test", () => {

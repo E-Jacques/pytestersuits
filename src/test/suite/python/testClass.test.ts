@@ -12,11 +12,12 @@ import { TestList } from "../../../testingClass/testList";
 suite("Testing Test.appendTestToFile", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(async (done) => {
-        await createDir(testDir);
-        await createFile(join(testDir, "test_first.py"));
-        await createFile(join(testDir, "test_second.py"));
-        done();
+    before((done) => {
+        createDir(testDir).then(async () => {
+            await createFile(join(testDir, "test_first.py"));
+            await createFile(join(testDir, "test_second.py"));
+            done();
+        });
     });
 
     test("Testing for one file", () => {
@@ -58,10 +59,11 @@ suite("Testing Test.appendTestToFile", () => {
 suite("Testing Test.importTestLibraryIfNeeded", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(async (done) => {
-        await createDir(testDir);
-        await createFile(join(testDir, "test_third.py"));
-        done();
+    before((done) => {
+        createDir(testDir).then(async () => {
+            await createFile(join(testDir, "test_third.py"));
+            done();
+        });
     });
 
     test("Correctly write to file", () => {
@@ -97,11 +99,12 @@ suite("Testing Test.importTestLibraryIfNeeded", () => {
 suite("Testing Test.fileContainsImport", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(async (done) => {
-        await createDir(testDir);
-        await createFile(join(testDir, "test_fourth.py"));
-        await createFile(join(testDir, "test_fifth.py"));
-        done();
+    before((done) => {
+        createDir(testDir).then(async () => {
+            await createFile(join(testDir, "test_fourth.py"));
+            await createFile(join(testDir, "test_fifth.py"));
+            done();
+        });
     });
 
     test("Should detect 'import pytest'", () => {
@@ -153,11 +156,12 @@ suite("Testing Test.fileContainsImport", () => {
 suite("Testing TestList class for pytest", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(async (done) => {
-        await createDir(testDir);
-        await createFile(join(testDir, "test_sixth.py"));
-        await createFile(join(testDir, "test_seventh.py"));
-        done();
+    before((done) => {
+        createDir(testDir).then(async () => {
+            await createFile(join(testDir, "test_sixth.py"));
+            await createFile(join(testDir, "test_seventh.py"));
+            done();
+        });
     });
 
     test("Should do the same with one test", () => {

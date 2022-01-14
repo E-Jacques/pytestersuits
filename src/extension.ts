@@ -32,9 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 			coverageReportProvider.setLibraryInterface(null);
 			return;
 		}
-
-		console.log(ev);
-		
+				
 		let currentLibrary = getCurrentCodeLanguage().getDefaultTestingLibrary() || null;
 		coverageReportProvider.setLibraryInterface(currentLibrary);
 	});

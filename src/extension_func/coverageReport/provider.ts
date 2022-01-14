@@ -25,9 +25,9 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
     }
 
     public setLibraryInterface(lib: LibraryInterface | null): void {
-        this.libraryInterface = lib;
-        console.log(lib?.name);
-        
+        if (this.libraryInterface?.name === lib?.name) { return; }
+
+        this.libraryInterface = lib;        
         this.reload();
     }
 

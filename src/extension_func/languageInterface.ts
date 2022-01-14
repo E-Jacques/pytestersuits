@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChangeReport } from "../test";
+import { ChangeReport } from "../testingClass/test";
 import { LibraryInterface } from "./libraryInterface";
 
 export type FileReport = {

@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { ChangeReport, Test } from "../../../test";
+import { ChangeReport, Test } from "../../../testingClass/test";
 import { FileReport, LanguageInterface, LinesReport } from "../../languageInterface";
 import { LibraryInterface } from "../../libraryInterface";
 import { SuiteTester } from "../../suiteTester";
@@ -8,6 +8,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import { addExtensionToEnd, getFileWithExtension } from "../../../func";
 import { openDocumentToLine } from "../../../vscodefunc";
+import { TestList } from "../../../testingClass/testList";
 
 type TestAddRegexGroup = {
     before: string,
@@ -25,7 +26,7 @@ export class VSCTestLibrary implements LibraryInterface, SuiteTester {
         "import * as assert from \"assert\""
     ];
 
-    constructor (public parent: TypescriptHandler) {};
+    constructor(public parent: TypescriptHandler) { };
 
     public getImportLibraries(): string[] {
         return this.importLibraries;
@@ -125,82 +126,56 @@ export class VSCTestLibrary implements LibraryInterface, SuiteTester {
         });
     }
 
-    private getTestName(test: Test): void {
-        let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Name of your test" });
+    private getTestName(testList: TestList): void {
+        let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Names of your tests (pass multiple tests by delimitating them with ';')" });
         testNameInputBox.then(testName => {
             if (!testName) {
-                vscode.window.showErrorMessage("You need to provide a suite name.");
+                vscode.window.showErrorMessage("You need to provide a test name.");
                 return;
             }
-            test.setName(testName);
-            test.appendTestToFile();
-            openDocumentToLine(test.getFile(), -1);
 
-            vscode.window.showInformationMessage("Test have been successfully added to " + test.getFile());
+            testList.extractTestsFromString(testName, ";", (s: string) => s);
+            testList.addTestsToFile();
+            openDocumentToLine(testList.getFile(), -1);
+
+            vscode.window.showInformationMessage("Test have been successfully added to " + testList.getFile());
         });
     }
 
-    private getSuiteName(test: Test): void {
+    private getSuiteName(testList: TestList): void {
         let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Name of the suite in which you want to put your test" });
         testNameInputBox.then(suiteName => {
             if (!suiteName) {
                 vscode.window.showErrorMessage("You need to provide a suite name.");
                 return;
             }
-            test.setSuite(suiteName);
-            this.getTestName(test);
+            testList.setSuite(suiteName);
+            this.getTestName(testList);
         });
     }
 
-    private getFileName(test: Test, quickPickPromise: Promise<string>, compatibleFiles: string[], rootPath: string): void {
+    private getFileName(testList: TestList, quickPickPromise: Promise<string>, compatibleFiles: string[], rootPath: string): void {
         quickPickPromise.then((value: string) => {
             if (!value) {
-                test.setFile("");
+                testList.setFile("");
                 return;
             } else {
                 if (!compatibleFiles.includes(value)) {
                     value = this.parent.normalizeStringToConvention(value);
                 }
 
-                test.setFile(path.join(rootPath, value));
+                testList.setFile(path.join(rootPath, value));
             }
 
-            this.getSuiteName(test);
+            this.getSuiteName(testList);
         });
     }
 
     addTestToFile(rootPath: string): void {
-        let test = new Test("", "", this);
+        let test = new TestList("", this);
         let compatibleFiles = getFileWithExtension(rootPath, this.parent.testFileExtension);
         let quickPickPromise = this.buildQuickPickPromise(compatibleFiles);
 
-        quickPickPromise.then((value: string) => {
-            if (!value) {
-                test.setFile("");
-                return;
-            } else {
-                if (!compatibleFiles.includes(value)) {
-                    value = this.parent.normalizeStringToConvention(value);
-                }
-
-                test.setFile(path.join(rootPath, value));
-            }
-
-            let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Name of your test" });
-            testNameInputBox.then(value => {
-                if (!value) {
-                    value = "";
-                }
-
-                return this.parent.normalizeStringToConvention(value);
-            }).then(normalizedStringValue => {
-                test.setName(normalizedStringValue);
-                test.appendTestToFile();
-                openDocumentToLine(test.getFile(), -1);
-
-                vscode.window.showInformationMessage("Test have been successfully added to " + test.getFile());
-            });
-        });
         this.getFileName(test, quickPickPromise, compatibleFiles, rootPath);
     }
 }

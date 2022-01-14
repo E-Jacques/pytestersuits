@@ -20,8 +20,6 @@ Select a file and a name to create this test.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
 Initial release of `pytestersuits`.
@@ -56,3 +54,8 @@ Fix test issue with file.
 
 Refactor the code to handle multiple libraries instead of only one per language. <br>
 Implement `pytest` for python and `vscode extension test suit` for typescript.
+
+### 2.2.1
+
+Changing file will now also change the displayed coverage report UI. <br>
+If the used library don't handle coverage report UI, it will show an empty one.

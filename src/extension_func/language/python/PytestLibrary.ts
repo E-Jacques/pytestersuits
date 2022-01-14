@@ -12,6 +12,7 @@ import * as path from "path";
 export class Pytest implements LibraryInterface {
     public importLibraries = "import pytest";
     public name = "pytest";
+    public coverageReportUI = true;
 
     constructor(public parent: PythonHandler) {}
 

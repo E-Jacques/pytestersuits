@@ -14,16 +14,28 @@ export function activate(context: vscode.ExtensionContext) {
 	const rootPath = getRootPath();
 
 	vscode.commands.registerCommand('pytestersuits.addTestToFile', () => addTestToFile(rootPath, getCurrentCodeLanguage()));
-	let defaultLibrary = getCurrentCodeLanguage().getDefaultTestingLibrary();
-	if (!defaultLibrary) {return; }
 	const coverageReportProvider = new CoverageReportProvider(
-		join((vscode.workspace.workspaceFolders || [{ uri: { path: "." } }])[0].uri.path, "htmlcov"), defaultLibrary);
+		join(
+			(vscode.workspace.workspaceFolders || [{ uri: { path: "." } }])[0].uri.path,
+			"htmlcov"
+		),
+		getCurrentCodeLanguage().getDefaultTestingLibrary()
+	);
 	vscode.window.createTreeView("coverReport", {
 		treeDataProvider: coverageReportProvider
 	});
 	vscode.commands.registerCommand("coverReport.goto", async (report: CoverageReport) => { await report.goto(); });
 	vscode.workspace.onDidChangeTextDocument((ev) => handleTextDocumentChangeEvent(ev, coverageReportProvider));
 	vscode.workspace.onDidSaveTextDocument((ev) => handleTextDocumentSaveEvent(ev, coverageReportProvider));
+	vscode.window.onDidChangeActiveTextEditor((ev) => {
+		if (!ev) {
+			coverageReportProvider.setLibraryInterface(null);
+			return;
+		}
+
+		let currentLibrary = getCurrentCodeLanguage().getDefaultTestingLibrary() || null;
+		coverageReportProvider.setLibraryInterface(currentLibrary);
+	});
 }
 
 // this method is called when your extension is deactivated

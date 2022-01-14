@@ -19,6 +19,11 @@ export interface LibraryInterface {
     name: string;
 
     /**
+     * `True` if library can process coverage report. 
+     */
+    coverageReportUI: boolean;
+
+    /**
      * Get line by line coverage from html Data
      */
     extractLinesPercentages(htmlData: string): LinesReport;

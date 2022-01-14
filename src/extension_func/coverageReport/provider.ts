@@ -19,9 +19,16 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
     private _onDidChangeTreeData: vscode.EventEmitter<CoverageReport | undefined | void> = new vscode.EventEmitter<CoverageReport | undefined | void>();
     readonly onDidChangeTreeData: vscode.Event<CoverageReport | undefined | void> = this._onDidChangeTreeData.event;
 
-    constructor(private coveragePath: string, private libraryInterface: LibraryInterface) {
+    constructor(private coveragePath: string, private libraryInterface: LibraryInterface | null) {
         this.coverageReportList = [];
         this.buildCoverageReportList();
+    }
+
+    public setLibraryInterface(lib: LibraryInterface | null): void {
+        this.libraryInterface = lib;
+        console.log(lib?.name);
+        
+        this.reload();
     }
 
     public reload() {
@@ -63,6 +70,10 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
 
     public buildCoverageReportList() {
         this.coverageReportList = [];
+        if (!this.libraryInterface || !this.libraryInterface.coverageReportUI) {
+            return;
+        }
+
         let htmlFiles = readdirSync(this.coveragePath).filter(f => isExtension(join(this.coveragePath, f), "html")).filter(f => f !== "index.html");
 
         for (let file of htmlFiles) {
@@ -96,7 +107,7 @@ export class CoverageReportProvider implements vscode.TreeDataProvider<CoverageR
     private getFileReport(coverageReport: FileReport): CoverageReport {
         let collapse = vscode.TreeItemCollapsibleState.Collapsed;
         if (coverageReport.percent === 100) { collapse = vscode.TreeItemCollapsibleState.None; }
-        
+
         return new CoverageReport(coverageReport.filename, coverageReport.percent, null, collapse);
     }
 

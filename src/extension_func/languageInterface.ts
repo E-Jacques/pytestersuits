@@ -37,7 +37,7 @@ export abstract class LanguageInterface {
             this.languageLibrary.map(lib => ({ label: lib.name, value: lib }))
         ).then(res => {
             let lib = res?.value;
-            if (!lib) { console.error("Can't pick right library."); return; }
+            if (!lib) { return; }
             lib.addTestToFile(rootPath);
         });
     }
@@ -45,7 +45,7 @@ export abstract class LanguageInterface {
     getDefaultTestingLibrary (): LibraryInterface | null {
         let defaultLib = this.getConfigLibrary();
         if (defaultLib) { return defaultLib; }
-        
+
         if (this.languageLibrary.length === 0) {
             vscode.window.showWarningMessage("Can't load a default library ...");
             return null;

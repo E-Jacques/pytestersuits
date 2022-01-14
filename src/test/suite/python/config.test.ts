@@ -16,12 +16,12 @@ suite("Testing python's default library configuration", () => {
         assert.strictEqual(lib, null);
     });
 
-    test("Should return pytest", async () => {
+    test("Should return pytest", () => {
         let extensionConfig = vscode.workspace.getConfiguration("pytestersuits");
-        await extensionConfig.update("pythonDefaultTestLibrary", "pytest", true);
-
-        extensionConfig = vscode.workspace.getConfiguration("pytestersuits");
-        let lib = new PythonHandler().getConfigLibrary();
-        assert.strictEqual(lib?.name, "pytest");
+        extensionConfig.update("pythonDefaultTestLibrary", "pytest", true).then(() => {
+            extensionConfig = vscode.workspace.getConfiguration("pytestersuits");
+            let lib = new PythonHandler().getConfigLibrary();
+            assert.strictEqual(lib?.name, "pytest");
+        });
     });
 });

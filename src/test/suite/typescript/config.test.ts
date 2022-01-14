@@ -16,12 +16,12 @@ suite ("Testing typescript's default library configuration", () => {
         assert.strictEqual(lib, null);
     });
 
-    test("Should return 'Vscode Extension Test suit'", async () => {
+    test("Should return 'Vscode Extension Test suit'", () => {
         let extensionConfig = vscode.workspace.getConfiguration("pytestersuits");
-        await extensionConfig.update("typescriptDefaultTestLibrary", "Vscode Extension Test suit", true);
-
-        extensionConfig = vscode.workspace.getConfiguration("pytestersuits");
-        let lib = new TypescriptHandler().getConfigLibrary();
-        assert.strictEqual(lib?.name, "Vscode Extension Test suit");
+        extensionConfig.update("typescriptDefaultTestLibrary", "Vscode Extension Test suit", true).then(() => {
+            extensionConfig = vscode.workspace.getConfiguration("pytestersuits");
+            let lib = new TypescriptHandler().getConfigLibrary();
+            assert.strictEqual(lib?.name, "Vscode Extension Test suit");
+        });
     });
 });

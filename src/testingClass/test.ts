@@ -1,7 +1,6 @@
 import { accessSync, appendFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-import path = require("path");
-import { LanguageInterface } from "./extension_func/languageInterface";
-import { LibraryInterface } from "./extension_func/libraryInterface";
+import * as path from "path";
+import { LibraryInterface } from "../extension_func/libraryInterface";
 
 export type ChangeReport = {
     content: string
@@ -37,6 +36,14 @@ export class Test {
             }
         }
         return false;
+    }
+
+    public toString () {
+        if (this.suiteName) {
+            return `${this.name} [${this.suiteName}]`;
+        }
+
+        return this.name;
     }
 
     private getImport () {

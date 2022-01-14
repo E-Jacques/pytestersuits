@@ -1,20 +1,22 @@
 import { execSync } from "child_process";
 import parse from "node-html-parser";
+import * as path from "path";
+import * as vscode from "vscode";
+
+import PythonHandler from "./PythonHandler";
 import { addExtensionToEnd, getFileWithExtension } from "../../../func";
-import { ChangeReport, Test } from "../../../test";
+import { ChangeReport, Test } from "../../../testingClass/test";
 import { FileReport, LinesReport } from "../../languageInterface";
 import { LibraryInterface } from "../../libraryInterface";
-import PythonHandler from "./PythonHandler";
-import * as vscode from "vscode";
 import { openDocumentToLine } from "../../../vscodefunc";
-import * as path from "path";
+import { TestList } from "../../../testingClass/testList";
 
 export class Pytest implements LibraryInterface {
     public importLibraries = "import pytest";
     public name = "pytest";
     public coverageReportUI = true;
 
-    constructor(public parent: PythonHandler) {}
+    constructor(public parent: PythonHandler) { }
 
     public runCoverageReport(dirpath: string, cwd: string): void {
         execSync("pytest --cov-report html --cov=" + dirpath, {
@@ -72,8 +74,41 @@ export class Pytest implements LibraryInterface {
 
     public addTestToFile(rootPath: string): void {
         let compatibleFiles = getFileWithExtension(rootPath, this.parent.testFileExtension);
-        let test = new Test("", "", this);
-        let quickPickPromise = new Promise<string>(resolve => {
+        let testList = new TestList("", this);
+        let quickPickPromise = this.buildQuickPickPromise(compatibleFiles);
+
+        this.getFileName(quickPickPromise, compatibleFiles, testList, rootPath);
+    }
+
+    private getFileName(quickPickPromise: Promise<string>, compatibleFiles: string[], testList: TestList, rootPath: string) {
+        quickPickPromise.then((value: string) => {
+            if (!value) { return; }
+
+            if (!compatibleFiles.includes(value)) {
+                value = this.parent.normalizeStringToConvention(value);
+            }
+
+            testList.setFile(path.join(rootPath, value));
+
+            this.getTestNames(testList);
+        });
+    }
+
+    private getTestNames(testList: TestList) {
+        let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Names of your tests (pass multiple tests by delimitating them with ';')" });
+        testNameInputBox.then(value => {
+            if (!value) { return; }
+
+            testList.extractTestsFromString(value, ";", this.parent.normalizeStringToConvention);
+            testList.addTestsToFile();
+            openDocumentToLine(testList.getFile(), -1);
+
+            vscode.window.showInformationMessage("Test have been successfully added to " + testList.getFile());
+        });
+    }
+
+    private buildQuickPickPromise(compatibleFiles: string[]) {
+        return new Promise<string>(resolve => {
             const quickPick = vscode.window.createQuickPick();
             quickPick.items = compatibleFiles.map(s => ({ label: s }));
             quickPick.title = "Choose a file";
@@ -106,34 +141,6 @@ export class Pytest implements LibraryInterface {
             });
 
             quickPick.show();
-        });
-
-        quickPickPromise.then((value: string) => {
-            if (!value) {
-                test.setFile("");
-                return;
-            } else {
-                if (!compatibleFiles.includes(value)) {
-                    value = this.parent.normalizeStringToConvention(value);
-                }
-
-                test.setFile(path.join(rootPath, value));
-            }
-
-            let testNameInputBox = vscode.window.showInputBox({ placeHolder: "Name of your test" });
-            testNameInputBox.then(value => {
-                if (!value) {
-                    value = "";
-                }
-
-                return this.parent.normalizeStringToConvention(value);
-            }).then(normalizedStringValue => {
-                test.setName(normalizedStringValue);
-                test.appendTestToFile();
-                openDocumentToLine(test.getFile(), -1);
-
-                vscode.window.showInformationMessage("Test have been successfully added to " + test.getFile());
-            });
         });
     }
 }

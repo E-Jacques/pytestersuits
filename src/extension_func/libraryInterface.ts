@@ -1,4 +1,4 @@
-import { ChangeReport } from "../test";
+import { ChangeReport } from "../testingClass/test";
 import { FileReport, LanguageInterface, LinesReport } from "./languageInterface";
 
 export interface LibraryInterface {

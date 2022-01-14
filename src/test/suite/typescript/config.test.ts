@@ -3,7 +3,7 @@ import * as assert from "assert";
 import TypescriptHandler from "../../../extension_func/language/typescript/TypescriptHandler";
 import { after } from "mocha";
 
-suite ("Testing python's default library configuration", () => {
+suite ("Testing typescript's default library configuration", () => {
     after(async () => {
         const extensionConfig = vscode.workspace.getConfiguration("pytestersuits");
         let defaultValue = extensionConfig.inspect<string>("typescriptDefaultTestLibrary")?.defaultValue;
@@ -16,7 +16,7 @@ suite ("Testing python's default library configuration", () => {
         assert.strictEqual(lib, null);
     });
 
-    test("Should return pytest", async () => {
+    test("Should return 'Vscode Extension Test suit'", async () => {
         let extensionConfig = vscode.workspace.getConfiguration("pytestersuits");
         await extensionConfig.update("typescriptDefaultTestLibrary", "Vscode Extension Test suit", true);
 

@@ -59,3 +59,7 @@ Implement `pytest` for python and `vscode extension test suit` for typescript.
 
 Changing file will now also change the displayed coverage report UI. <br>
 If the used library don't handle coverage report UI, it will show an empty one.
+
+### 2.2.2
+
+You can now add multiple test at once by passing a delimiter.

@@ -5,8 +5,9 @@ import { join } from "path";
 import { createDir, createFile } from "../index";
 import {Pytest} from "../../../extension_func/language/python/PytestLibrary";
 
-import { Test } from "../../../test";
+import { Test } from "../../../testingClass/test";
 import PythonHandler from "../../../extension_func/language/python/PythonHandler";
+import { TestList } from "../../../testingClass/testList";
 
 suite("Testing Test.appendTestToFile", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
@@ -151,5 +152,46 @@ suite("Testing Test.fileContainsImport", () => {
             "def test_func2():\n" +
             "\tassert(func(3) == -62)");
         assert(!test.fileContainsImport());
+    });
+});
+
+suite("Testing TestList class for pytest", () => {
+    const testDir = join(__filename, "..", "..", "..", "test_env");
+
+    before(() => {
+        return new Promise<void>(async (resolve) => {
+            await createDir(testDir);
+            await createFile(join(testDir, "test_sixth.py"));
+            await createFile(join(testDir, "test_seventh.py"));
+            resolve();
+        });
+    });
+
+    test("Should do the same with one test", () => {
+        const filename = join(testDir, "test_sixth.py");
+        writeFileSync(filename, "", { encoding: "utf8" });
+        
+        const testList = new TestList(filename, new Pytest(new PythonHandler()),null);
+        testList.addTest("test1");
+        testList.addTestsToFile();
+
+        const shouldBe = `import pytest\n\n@pytest.mark.skip(reason="generated automaticly")\ndef test_test1():\n\tpass\n`;
+
+        assert.strictEqual(readFileSync(filename, "utf-8"), shouldBe);
+    });
+
+    test("Should also work with multiple tests", () => {
+        const filename = join(testDir, "test_seventh.py");
+        writeFileSync(filename, "", { encoding: "utf8" });
+
+        const testList = new TestList(filename, new Pytest(new PythonHandler()), null);
+        testList.addTest("test1");
+        testList.addTest("test2");
+        testList.addTestsToFile();
+
+
+        const shouldBe = `import pytest\n\n@pytest.mark.skip(reason="generated automaticly")\ndef test_test1():\n\tpass\n\n@pytest.mark.skip(reason="generated automaticly")\ndef test_test2():\n\tpass\n`;
+
+        assert.strictEqual(readFileSync(filename, "utf-8"), shouldBe);
     });
 });

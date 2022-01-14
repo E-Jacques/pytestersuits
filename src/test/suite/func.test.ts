@@ -64,13 +64,11 @@ suite("isExtension", () => {
 suite("isDirectory", () => {
 	const testDir = join(__filename, "..", "..", "test_env", "test_tmp");
 
-	before(() => {
+	before(async (done) => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
 
-		return new Promise<void>(async (resolve) => {
-			await createTestDir(testDir, filenames, filenames);
-			resolve();
-		});
+		await createTestDir(testDir, filenames, filenames);
+		done();
 	});
 
 	test("Not a directory", () => {
@@ -88,13 +86,11 @@ suite("isDirectory", () => {
 suite("getFileWithExtension", () => {
 	const testDir = join(__filename, "..", "..", "test_env", "test_tmp");
 
-	before(() => {
+	before(async (done) => {
 		const filenames = ["test.py", "main.py", "wrong.piy", "wrong.exe", "a.py"];
 
-		return new Promise<void>(async (resolve) => {
-			await createTestDir(testDir, filenames, filenames);
-			resolve();
-		});
+		await createTestDir(testDir, filenames, filenames);
+		done();
 	});
 
 	test("Throw Error on dir not found", () => {

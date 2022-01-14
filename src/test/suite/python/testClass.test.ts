@@ -3,7 +3,7 @@ import { readFile, readFileSync, writeFileSync } from "fs";
 import { before } from "mocha";
 import { join } from "path";
 import { createDir, createFile } from "../index";
-import {Pytest} from "../../../extension_func/language/python/PytestLibrary";
+import { Pytest } from "../../../extension_func/language/python/PytestLibrary";
 
 import { Test } from "../../../testingClass/test";
 import PythonHandler from "../../../extension_func/language/python/PythonHandler";
@@ -12,13 +12,11 @@ import { TestList } from "../../../testingClass/testList";
 suite("Testing Test.appendTestToFile", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(() => {
-        return new Promise<void>(async (resolve) => {
-            await createDir(testDir);
-            await createFile(join(testDir, "test_first.py"));
-            await createFile(join(testDir, "test_second.py"));
-            resolve();
-        });
+    before(async (done) => {
+        await createDir(testDir);
+        await createFile(join(testDir, "test_first.py"));
+        await createFile(join(testDir, "test_second.py"));
+        done();
     });
 
     test("Testing for one file", () => {
@@ -60,12 +58,10 @@ suite("Testing Test.appendTestToFile", () => {
 suite("Testing Test.importTestLibraryIfNeeded", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(() => {
-        return new Promise<void>(async (resolve) => {
-            await createDir(testDir);
-            await createFile(join(testDir, "test_third.py"));
-            resolve();
-        });
+    before(async (done) => {
+        await createDir(testDir);
+        await createFile(join(testDir, "test_third.py"));
+        done();
     });
 
     test("Correctly write to file", () => {
@@ -101,15 +97,13 @@ suite("Testing Test.importTestLibraryIfNeeded", () => {
 suite("Testing Test.fileContainsImport", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(() => {
-        return new Promise<void>(async (resolve) => {
-            await createDir(testDir);
-            await createFile(join(testDir, "test_fourth.py"));
-            await createFile(join(testDir, "test_fifth.py"));
-            resolve();
-        });
+    before(async (done) => {
+        await createDir(testDir);
+        await createFile(join(testDir, "test_fourth.py"));
+        await createFile(join(testDir, "test_fifth.py"));
+        done();
     });
-    
+
     test("Should detect 'import pytest'", () => {
         const filename = join(testDir, "test_fourth.py");
         const testName = "first";
@@ -159,20 +153,18 @@ suite("Testing Test.fileContainsImport", () => {
 suite("Testing TestList class for pytest", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(() => {
-        return new Promise<void>(async (resolve) => {
-            await createDir(testDir);
-            await createFile(join(testDir, "test_sixth.py"));
-            await createFile(join(testDir, "test_seventh.py"));
-            resolve();
-        });
+    before(async (done) => {
+        await createDir(testDir);
+        await createFile(join(testDir, "test_sixth.py"));
+        await createFile(join(testDir, "test_seventh.py"));
+        done();
     });
 
     test("Should do the same with one test", () => {
         const filename = join(testDir, "test_sixth.py");
         writeFileSync(filename, "", { encoding: "utf8" });
-        
-        const testList = new TestList(filename, new Pytest(new PythonHandler()),null);
+
+        const testList = new TestList(filename, new Pytest(new PythonHandler()), null);
         testList.addTest("test1");
         testList.addTestsToFile();
 

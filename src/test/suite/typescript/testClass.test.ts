@@ -11,15 +11,13 @@ import { TestList } from "../../../testingClass/testList";
 suite("Testing Test.appendToFile for javascript", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(() => {
-        return new Promise<void>(async (resolve) => {
-            await createDir(testDir);
-            await createFile(join(testDir, "testFirst.test.js"));
-            await createFile(join(testDir, "testSecond.test.js"));
-            await createFile(join(testDir, "testThird.test.js"));
-            await createFile(join(testDir, "testFourth.test.js"));
-            resolve();
-        });
+    before(async (done) => {
+        await createDir(testDir);
+        await createFile(join(testDir, "testFirst.test.js"));
+        await createFile(join(testDir, "testSecond.test.js"));
+        await createFile(join(testDir, "testThird.test.js"));
+        await createFile(join(testDir, "testFourth.test.js"));
+        done();
     });
 
     test("Should add the suite if not provided", () => {
@@ -112,19 +110,17 @@ suite("Testing Test.appendToFile for javascript", () => {
 suite("Testing TestList class for VSCE test suit", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
-    before(() => {
-        return new Promise<void>(async (resolve) => {
-            await createDir(testDir);
-            await createFile(join(testDir, "testFifth.test.js"));
-            await createFile(join(testDir, "testSixth.test.js"));
-            resolve();
-        });
+    before(async (done) => {
+        await createDir(testDir);
+        await createFile(join(testDir, "testFifth.test.js"));
+        await createFile(join(testDir, "testSixth.test.js"));
+        done();
     });
 
     test("Should do the same with one test", () => {
         const filename = join(testDir, "testFifth.test.js");
         writeFileSync(filename, "", { encoding: "utf8" });
-        
+
         const testList = new TestList(filename, new VSCTestLibrary(new TypescriptHandler()), "my suite");
         testList.addTest("test");
         testList.addTestsToFile();

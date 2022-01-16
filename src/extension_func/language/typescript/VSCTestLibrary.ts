@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import { ChangeReport, Test } from "../../../testingClass/test";
 import { FileReport, LanguageInterface, LinesReport } from "../../languageInterface";
 import { LibraryInterface } from "../../libraryInterface";
-import { SuiteTester } from "../../suiteTester";
+import { SuitTester } from "../../suiteTester";
 import TypescriptHandler from "./TypescriptHandler";
 import * as vscode from "vscode";
 import * as path from "path";
@@ -10,13 +10,13 @@ import { addExtensionToEnd, getFileWithExtension } from "../../../func";
 import { openDocumentToLine } from "../../../vscodefunc";
 import { TestList } from "../../../testingClass/testList";
 
-type TestAddRegexGroup = {
+export type TestAddRegexGroup = {
     before: string,
     inside: string,
     after: string
 };
 
-export class VSCTestLibrary implements LibraryInterface, SuiteTester {
+export class VSCTestLibrary implements LibraryInterface, SuitTester {
     public name = "Vscode Extension Test suit";
     public coverageReportUI = false;
     public importLibraries = [

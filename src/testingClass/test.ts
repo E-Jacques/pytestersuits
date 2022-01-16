@@ -58,7 +58,7 @@ export class Test {
             return;
         }
 
-        if (!this.fileContainsImport()) {
+        if (!this.fileContainsImport() && this.libraryInterface.importLibraries.length > 0) {
             let data = readFileSync(this.file, "utf-8");
             writeFileSync(this.file, this.getImport() + data, "utf-8");
         }

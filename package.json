@@ -56,7 +56,7 @@
           ],
           "enumDescriptions": [
             "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible.",
-            "You will use 'Vscode Extension Test suit' as Typescript test library."
+            "You will use 'Vscode Extension Test suit' as Typescript test library.\nCoverage Report UI won't be accessible."
           ]
         },
         "pytestersuits.javascriptDefaultTestLibrary": {
@@ -64,10 +64,12 @@
           "type": "string",
           "default": "Choose each time",
           "enum": [
-            "Choose each time"
+            "Choose each time",
+            "Jest"
           ],
           "enumDescriptions": [
-            "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible."
+            "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible.",
+            "You will use 'Jest' as Javascript test library.\nCoverage Report UI won't be accessible."
           ]
         },
         "pytestersuits.delimiter" : {

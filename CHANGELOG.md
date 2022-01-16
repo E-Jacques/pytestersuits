@@ -49,3 +49,7 @@ You can now add multiple test at once by passing a delimiter.
 ### 2.2.3
 
 You can now customize the delimiter used to add multiple tests at once.
+
+### 2.3.0
+
+Jest (Javascript) is now handled by pytestersuits.

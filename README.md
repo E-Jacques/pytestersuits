@@ -20,12 +20,27 @@ You can also directly open the untested lines by click on the button taht appear
 ### Add Test to File command
 - Pytest (Python) ✅
 - Vscode Extension Test Suit (Typescript) ✅
-- Jest (Javascript)
+- Jest (Javascript) ✅
 
 ### Coverage Report UI
 - Pytest (Python) ✅
 - Vscode Extension Test Suit (Typescript) ❌
-- Jest (Javascript)
+- Jest (Javascript) ❌
+
+## Configuration
+
+### Language default library
+
+To add test you have two possible options:
+- First one, you set the default language library to `Choose each time`. This way you will be able to select the library you want to use each time you run the command.
+- Seconde choice, you select a specific library and, in this case, you won't be able to change it. 
+<br>
+<br>
+Keep in mind that if you select `Choose each time`, you won't be able to have the coverage report UI.
+
+### Delimiter
+
+You can set your own delimiter to split the different tests the using `Add Test to File`.
 
 ## Release Notes
 
@@ -76,3 +91,7 @@ You can now add multiple test at once by passing a delimiter.
 ### 2.2.3
 
 You can now customize the delimiter used to add multiple tests at once.
+
+### 2.3.0
+
+Jest (Javascript) is now handled by pytestersuits.

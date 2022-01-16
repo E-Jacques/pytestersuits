@@ -8,7 +8,7 @@ import { VSCTestLibrary } from "../../../extension_func/language/typescript/VSCT
 import { Test } from "../../../testingClass/test";
 import { TestList } from "../../../testingClass/testList";
 
-suite("Testing Test.appendToFile for javascript", () => {
+suite("Testing Test.appendToFile for typescript", () => {
     const testDir = join(__filename, "..", "..", "..", "test_env");
 
     before((done) => {

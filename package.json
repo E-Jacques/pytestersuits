@@ -44,6 +44,17 @@
             "You will use 'Vscode Extension Test suit' as Typescript test library."
           ]
         },
+        "pytestersuits.javascriptDefaultTestLibrary": {
+          "description": "The library you will, when working with Javascript, use to add test and vizualise your coverage report",
+          "type": "string",
+          "default": "Choose each time",
+          "enum": [
+            "Choose each time"
+          ],
+          "enumDescriptions": [
+            "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible."
+          ]
+        },
         "pytestersuits.delimiter" : {
           "description": "The delimiter you will use to add different test.",
           "default": ";",

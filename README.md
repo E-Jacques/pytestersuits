@@ -1,6 +1,6 @@
 # pytestersuits README
 
-pytestersuits is an extension that should be used to perform python test drivent development. It should mainly work for pytest.
+VSCode extension to make testing much more simple and intuitive.
 
 <a href='https://ko-fi.com/e_jacques' target='_blank' title='support: https://ko-fi.com/e_jacques'>
   <img height='24' style='border:0px;height:20px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=2' alt='https://ko-fi.com/e_jacques' /></a>
@@ -11,15 +11,21 @@ pytestersuits is an extension that should be used to perform python test drivent
 You can add some tests to your python files. They will be automatically marked as todo.
 Select a file and a name to create this test.
 
+### Coverage report UI
+You can vizualise your tests coverage reports inside Vscode. <br>
+You can also directly open the untested lines by click on the button taht appear when hovering the item inside the side menu.
+
 ## Language support
 
 ### Add Test to File command
 - Pytest (Python) ✅
 - Vscode Extension Test Suit (Typescript) ✅
+- Jest (Javascript)
 
 ### Coverage Report UI
 - Pytest (Python) ✅
 - Vscode Extension Test Suit (Typescript) ❌
+- Jest (Javascript)
 
 ## Release Notes
 

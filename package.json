@@ -2,12 +2,27 @@
   "name": "pytestersuits",
   "displayName": "PyTesterSuits",
   "description": "VSCode extension to make testing much more simple and intuitive.",
-  "version": "2.2.3",
+  "version": "2.3.0",
   "engines": {
     "vscode": "^1.63.0"
   },
+  "keywords": [
+    "Testing",
+    "Test",
+    "Pytest",
+    "Jest",
+    "VSCE",
+    "Coverage report",
+    "Automatisation",
+    "Automate",
+    "Adder",
+    "Suite",
+    "Code",
+    "Snippet"
+  ],
   "categories": [
-    "Testing"
+    "Testing",
+    "Programming Languages"
   ],
   "activationEvents": [
     "onCommand:pytestersuits.addTestToFile",

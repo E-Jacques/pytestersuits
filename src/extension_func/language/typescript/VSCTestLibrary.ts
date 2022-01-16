@@ -135,7 +135,6 @@ export class VSCTestLibrary implements LibraryInterface, SuitTester {
                 return;
             }
 
-
             testList.extractTestsFromString(testName, delimiter, (s: string) => s);
             testList.addTestsToFile();
             openDocumentToLine(testList.getFile(), -1);

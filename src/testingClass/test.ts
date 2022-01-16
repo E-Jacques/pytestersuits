@@ -46,7 +46,8 @@ export class Test {
         return this.name;
     }
 
-    private getImport () {
+    private getImport (): string | null {
+        if (this.libraryInterface.getImportLibraries().length === 0) { return null; }
         return this.libraryInterface.getImportLibraries()[0] + "\n";
     }
 
@@ -54,7 +55,7 @@ export class Test {
         try {
             accessSync(this.file);
         } catch (err) {
-            writeFileSync(this.file, this.getImport(), "utf-8");
+            writeFileSync(this.file, this.getImport() || "", "utf-8");
             return;
         }
 

@@ -38,7 +38,8 @@ export class TestList {
         let stringList = originalString
             .split(delimiter)
             .map(s => s.trim())
-            .map(formatFunction);
+            .map(formatFunction)
+            .filter(s => s);
 
         for (let testString of stringList) {
             this.addTest(testString);

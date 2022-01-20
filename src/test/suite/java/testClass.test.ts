@@ -25,7 +25,7 @@ suite("Testing Test.appendToFile for JUnit", () => {
     test("Should correctly put test", () => {
         const filename = join(testDir, "TestFirstJUnit.java");
         let test = new Test("firstTest", filename, new JUnitLibrary(new JavaHandler()), "TestFirstJUnit");
-        writeFileSync(filename, "class TestFirstJUnit {}", "utf-8");
+        writeFileSync(filename, "class TestFirstJUnit {\n\n}", "utf-8");
         test.appendTestToFile();
         const shouldBe =
             "import org.junit.jupiter.api.Test;\n\n" +

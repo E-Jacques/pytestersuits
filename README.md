@@ -21,11 +21,13 @@ You can also directly open the untested lines by click on the button taht appear
 - Pytest (Python) ✅
 - Vscode Extension Test Suit (Typescript) ✅
 - Jest (Javascript) ✅
+- JUnit (Java) ✅
 
 ### Coverage Report UI
 - Pytest (Python) ✅
 - Vscode Extension Test Suit (Typescript) ❌
 - Jest (Javascript) ❌
+- JUnit (Java) ❌
 
 ## Configuration
 
@@ -95,3 +97,7 @@ You can now customize the delimiter used to add multiple tests at once.
 ### 2.3.0
 
 Jest (Javascript) is now handled by pytestersuits.
+
+### 2.4.0
+
+JUnit (Javascript) is now handled by pytestersuits.

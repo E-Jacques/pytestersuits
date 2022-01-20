@@ -53,3 +53,7 @@ You can now customize the delimiter used to add multiple tests at once.
 ### 2.3.0
 
 Jest (Javascript) is now handled by pytestersuits.
+
+### 2.4.0
+
+JUnit (Javascript) is now handled by pytestersuits.

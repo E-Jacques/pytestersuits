@@ -2,7 +2,7 @@
   "name": "pytestersuits",
   "displayName": "PyTesterSuits",
   "description": "VSCode extension to make testing much more simple and intuitive.",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -77,10 +77,12 @@
           "type": "string",
           "default": "Choose each time",
           "enum": [
-            "Choose each time"
+            "Choose each time",
+            "JUnit"
           ],
           "enumDescriptions": [
-            "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible."
+            "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible.",
+            "You will use 'JUnit' as Java test library.\nCoverage Report UI won't be accessible."
           ]
         },
         "pytestersuits.delimiter" : {

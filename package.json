@@ -72,6 +72,17 @@
             "You will use 'Jest' as Javascript test library.\nCoverage Report UI won't be accessible."
           ]
         },
+        "pytestersuits.javaDefaultTestLibrary": {
+          "description": "The library you will, when working with Java, use to add test and vizualise your coverage report",
+          "type": "string",
+          "default": "Choose each time",
+          "enum": [
+            "Choose each time"
+          ],
+          "enumDescriptions": [
+            "Will you have to pick the library each time you add a test.\nCoverage Report UI won't be accessible."
+          ]
+        },
         "pytestersuits.delimiter" : {
           "description": "The delimiter you will use to add different test.",
           "default": ";",

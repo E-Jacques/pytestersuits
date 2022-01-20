@@ -86,7 +86,7 @@ export class JUnitLibrary implements LibraryInterface, SuitTester {
                     if (quickPick.value === "") {
                         quickPick.items = compatibleFiles.map(s => ({ label: s, detail: s + " file" }));
                     } else {
-                        let PascalCaseValue = stringToPascalCase(quickPick.value);
+                        let pascalCaseValue = stringToPascalCase(quickPick.value);
                         let fileWithExt = addExtensionToEnd(PascalCaseValue, this.parent.testFileExtension);
 
                         quickPick.items = [{

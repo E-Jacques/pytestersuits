@@ -191,3 +191,22 @@ suite("Testing convertStringToCamelCase...", () => {
 		assert.strictEqual(func.convertStringToCamelCase("melange de _chose"), "melangeDeChose");
 	});
 });
+
+suite("testing stringToPascalCase", () => {
+	
+	test("Should return empty on empty output", () => {
+		assert.strictEqual(func.stringToPascalCase(""), "");
+	});
+
+	test("Should uppercase the first char of a camelCase string", () => {
+		assert.strictEqual(func.stringToPascalCase("test"), "Test");
+		assert.strictEqual(func.stringToPascalCase("testToday"), "TestToday");
+	});
+
+	test("Should switch space and underscore to match Pascal Case format", () => {
+		assert.strictEqual(func.stringToPascalCase("test oui"), "TestOui");
+		assert.strictEqual(func.stringToPascalCase("test_oui"), "TestOui");
+		assert.strictEqual(func.stringToPascalCase("test_oui non"), "TestOuiNon");
+	});
+
+});

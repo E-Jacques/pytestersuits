@@ -166,3 +166,10 @@ export function getFileWithExtension(dirToScan: string, ext: string): string[] {
 
     return filteredFiles;
 }
+
+export function stringToPascalCase (s: string): string {
+    if (s.length === 0) { return ""; }
+
+    const camelCase = convertStringToCamelCase(s);
+    return camelCase[0].toUpperCase() + camelCase.substring(1);
+}

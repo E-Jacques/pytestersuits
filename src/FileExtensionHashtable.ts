@@ -2,7 +2,7 @@ import { LanguageInterface } from "./extension_func/languageInterface";
 import PythonHandler from "./extension_func/language/python/PythonHandler";
 import TypescriptHandler from "./extension_func/language/typescript/TypescriptHandler";
 import JavascriptHandler from "./extension_func/language/javascript/JavascriptHandler";
-import JavaLanguage from "./extension_func/language/java/JavaLanguage";
+import JavaLanguage from "./extension_func/language/java/JavaHandler";
 
 interface HashTable {
     [key: string]: typeof PythonHandler | typeof TypescriptHandler;

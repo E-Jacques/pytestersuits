@@ -3,12 +3,13 @@ import * as vscode from "vscode";
 import { convertStringToCamelCase } from "../../../func";
 import { LanguageInterface } from "../../languageInterface";
 import { LibraryInterface } from "../../libraryInterface";
+import { JUnitLibrary } from "./JUnitLibrary";
 
-export default class JavaLanguage extends LanguageInterface {
+export default class JavaHandler extends LanguageInterface {
     public fileExtension = "java";
     public testFileExtension = "java";
-    public languageLibrary = [
-    
+    public languageLibrary: LibraryInterface[] = [
+        new JUnitLibrary(this)
     ];
 
     /**

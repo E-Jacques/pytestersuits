@@ -1,9 +1,11 @@
+import { writeFileSync } from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { addExtensionToEnd, getFileWithExtension, stringToPascalCase } from "../../../func";
 import { ChangeReport } from "../../../testingClass/test";
 import { TestList } from "../../../testingClass/testList";
 import { openDocumentToLine } from "../../../vscodefunc";
+import { CustomImportFunction } from "../../customImportFunc";
 import { FileReport, LanguageInterface, LinesReport } from "../../languageInterface";
 import { LibraryInterface } from "../../libraryInterface";
 import { SuitTester } from "../../suiteTester";
@@ -13,9 +15,9 @@ type TestAddRegexGroup = {
     inside: string
 };
 
-export class JUnitLibrary implements LibraryInterface, SuitTester {
+export class JUnitLibrary implements LibraryInterface, SuitTester, CustomImportFunction {
     importLibraries = [
-        "import org.junit.jupiter.api.Test;\n"
+        "import org.junit.*;\n"
     ];
     name = "JUnit";
     coverageReportUI = false;
@@ -39,9 +41,29 @@ export class JUnitLibrary implements LibraryInterface, SuitTester {
 
     runCoverageReport(dirpath: string, cwd: string): void { }
 
+    importTestLibrary(filename: string, data: string, encoding: "utf-8"): void {
+        const importRegex = new RegExp("import .*\\.junit\\..*;");
+        let asImport = importRegex.test(data);
+
+        if (!asImport) {
+            let lines = data.split(";");
+            let firstLine = lines[0] + ";";
+            let asPackage = firstLine.includes("package ");
+            if (asPackage) {
+                lines.shift();
+                let newData = lines.join("");
+                writeFileSync(filename, firstLine +"\n" + this.importLibraries[0] + newData, { encoding });
+                return;
+            }
+            writeFileSync(filename, this.importLibraries[0] + "\n" + data, { encoding });
+        }
+
+        return;
+    }
+
     containsSuite(data: string, suiteName: string): boolean {
         const regex = new RegExp(`class ${suiteName} \\\{.*\\\}`, "s");
-
+        
         return regex.test(data);
     }
 
@@ -62,7 +84,10 @@ export class JUnitLibrary implements LibraryInterface, SuitTester {
             "\t}\n";
 
         let res = data;
+        
         if (!this.containsSuite(data, suiteName)) {
+            console.log("not in in");
+            
             res += "class " + suiteName + " {\n\n}";
         }
 
@@ -86,8 +111,8 @@ export class JUnitLibrary implements LibraryInterface, SuitTester {
                     if (quickPick.value === "") {
                         quickPick.items = compatibleFiles.map(s => ({ label: s, detail: s + " file" }));
                     } else {
-                        let PascalCaseValue = stringToPascalCase(quickPick.value);
-                        let fileWithExt = addExtensionToEnd(PascalCaseValue, this.parent.testFileExtension);
+                        let pascalCaseValue = stringToPascalCase(quickPick.value);
+                        let fileWithExt = addExtensionToEnd(pascalCaseValue, this.parent.testFileExtension);
 
                         quickPick.items = [{
                             label: quickPick.value,
@@ -132,7 +157,7 @@ export class JUnitLibrary implements LibraryInterface, SuitTester {
     private getSuiteName(testList: TestList): void {
         const suiteName = stringToPascalCase(testList.getFile());
         testList.setSuite(path.parse(suiteName).name);
-        
+
         this.getTestName(testList);
     }
 

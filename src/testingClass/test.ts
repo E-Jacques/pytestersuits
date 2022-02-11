@@ -1,5 +1,6 @@
 import { accessSync, appendFileSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import * as path from "path";
+import { CustomImportFunction, isCustomImportFunctionImplementation } from "../extension_func/customImportFunc";
 import { LibraryInterface } from "../extension_func/libraryInterface";
 
 export type ChangeReport = {
@@ -9,7 +10,7 @@ export type ChangeReport = {
 };
 
 export class Test {
-    constructor(private name: string, private file: string, private libraryInterface: LibraryInterface, private suiteName: string | null = null) {}
+    constructor(private name: string, private file: string, private libraryInterface: LibraryInterface, private suiteName: string | null = null) { }
 
     public setFile(file: string) {
         this.file = file;
@@ -31,14 +32,14 @@ export class Test {
         let data = readFileSync(this.file, "utf-8");
 
         for (let importLibraries of this.libraryInterface.getImportLibraries()) {
-            if (data.includes(importLibraries)) {
+            if (data.includes(importLibraries as string)) {
                 return true;
             }
         }
         return false;
     }
 
-    public toString () {
+    public toString() {
         if (this.suiteName) {
             return `${this.name} [${this.suiteName}]`;
         }
@@ -46,7 +47,7 @@ export class Test {
         return this.name;
     }
 
-    private getImport (): string | null {
+    private getImport(): string | null {
         if (this.libraryInterface.getImportLibraries().length === 0) { return null; }
         return this.libraryInterface.getImportLibraries()[0] + "\n";
     }
@@ -61,15 +62,20 @@ export class Test {
 
         if (!this.fileContainsImport() && this.libraryInterface.importLibraries.length > 0) {
             let data = readFileSync(this.file, "utf-8");
-            writeFileSync(this.file, this.getImport() + data, "utf-8");
+
+            if (isCustomImportFunctionImplementation(this.libraryInterface)) {
+                (this.libraryInterface as any).importTestLibrary(this.file, data, "utf-8");
+            } else {
+                writeFileSync(this.file, this.getImport() + data, "utf-8");
+            }
         }
     }
 
-    public appendFile (changeReport: ChangeReport): void {
+    public appendFile(changeReport: ChangeReport): void {
         if (changeReport.appendToFile) {
-            appendFileSync(this.file, changeReport.content, {encoding: changeReport.encoding});
+            appendFileSync(this.file, changeReport.content, { encoding: changeReport.encoding });
         } else {
-            writeFileSync(this.file, changeReport.content, {encoding: changeReport.encoding});
+            writeFileSync(this.file, changeReport.content, { encoding: changeReport.encoding });
         }
     }
 
@@ -81,6 +87,6 @@ export class Test {
 
         let data = readFileSync(this.file, "utf-8");
         let changeReport = this.libraryInterface.getTestFormat(this.name, this.suiteName || "", data);
-        this.appendFile(changeReport);        
+        this.appendFile(changeReport);
     }
 }

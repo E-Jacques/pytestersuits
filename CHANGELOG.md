@@ -56,4 +56,9 @@ Jest (Javascript) is now handled by pytestersuits.
 
 ### 2.4.0
 
-JUnit (Javascript) is now handled by pytestersuits.
+JUnit (Java) is now handled by pytestersuits.
+
+### 2.4.1
+
+Solving issues concerning JUnit (Java) with package and overriding import from different path.<br>
+Default JUnit path for import is now more common.

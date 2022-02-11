@@ -1,6 +1,6 @@
 {
   "name": "pytestersuits",
-  "displayName": "PyTesterSuits",
+  "displayName": "TestHelper",
   "description": "VSCode extension to make testing much more simple and intuitive.",
   "version": "2.4.1",
   "engines": {

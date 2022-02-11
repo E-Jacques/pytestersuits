@@ -18,6 +18,9 @@ suite("Testing Test.appendToFile for JUnit", () => {
             await createFile(join(testDir, "TestSecondJUnit.java"));
             await createFile(join(testDir, "TestThirdJUnit.java"));
             await createFile(join(testDir, "TestFourthJUnit.java"));
+            await createFile(join(testDir, "TestTenthJUnit.java"));
+            await createFile(join(testDir, "TestEleventhJUnit.java"));
+            await createFile(join(testDir, "TestNinethJUnit.java"));
             done();
         });
     });
@@ -28,7 +31,7 @@ suite("Testing Test.appendToFile for JUnit", () => {
         writeFileSync(filename, "class TestFirstJUnit {\n\n}", "utf-8");
         test.appendTestToFile();
         const shouldBe =
-            "import org.junit.jupiter.api.Test;\n\n" +
+            "import org.junit.*;\n\n" +
             "class TestFirstJUnit {\n\n" +
             "\t@Test\n" +
             "\tvoid firstTest() {\n" +
@@ -45,7 +48,7 @@ suite("Testing Test.appendToFile for JUnit", () => {
         writeFileSync(filename, "", "utf-8");
         test.appendTestToFile();
         const shouldBe =
-            "import org.junit.jupiter.api.Test;\n\n" +
+            "import org.junit.*;\n\n" +
             "class TestSecondJUnit {\n\n" +
             "\t@Test\n" +
             "\tvoid firstTest() {\n" +
@@ -60,7 +63,7 @@ suite("Testing Test.appendToFile for JUnit", () => {
         const filename = join(testDir, "TestThirdJUnit.java");
         let test = new Test("thirdTest", filename, new JUnitLibrary(new JavaHandler()), "TestThirdJUnit");
         writeFileSync(filename,
-            "import org.junit.jupiter.api.Test;\n\n" +
+            "import org.junit.*;\n\n" +
             "class TestThirdJUnit {\n\n" +
             "\t@Test\n" +
             "\tvoid firstTest() {\n" +
@@ -70,8 +73,75 @@ suite("Testing Test.appendToFile for JUnit", () => {
             { encoding: "utf8" });
         test.appendTestToFile();
 
-        const shouldBe = "import org.junit.jupiter.api.Test;\n\n" +
+        const shouldBe = "import org.junit.*;\n\n" +
             "class TestThirdJUnit {\n\n" +
+            "\t@Test\n" +
+            "\tvoid firstTest() {\n" +
+            "\t\t// TODO\n" +
+            "\t}\n\n" +
+            "\t@Test\n" +
+            "\tvoid thirdTest() {\n" +
+            "\t\t// TODO\n" +
+            "\t}\n\n" +
+            "}";
+
+        assert.strictEqual(readFileSync(filename, "utf-8"), shouldBe);
+    });
+
+    test("Shouldn't remove package keyword from the top", () => {
+        const filename = join(testDir, "TestTenthJUnit.java");
+        let test = new Test("tenthTest", filename, new JUnitLibrary(new JavaHandler()), "TestTenthJUnit");
+        writeFileSync(filename,
+            "package mypackage;\n" +
+            "class TestTenthJUnit {\n\n" +
+            "}", { encoding: "utf-8" });
+        test.appendTestToFile();
+        const shouldBe = "package mypackage;\n" +
+            "import org.junit.*;\n\n" +
+            "class TestTenthJUnit {\n\n" +
+            "\t@Test\n" +
+            "\tvoid tenthTest() {\n" +
+            "\t\t// TODO\n" +
+            "\t}\n\n" +
+            "}";
+
+        assert.strictEqual(readFileSync(filename, "utf-8"), shouldBe);
+    });
+
+    test("Shouldn't remove package keyword from the top without overwriting datas", () => {
+        const filename = join(testDir, "TestNinethJUnit.java");
+        let test = new Test("tenthTest", filename, new JUnitLibrary(new JavaHandler()), "TestNinethJUnit");
+        writeFileSync(filename,
+            "package mypackage;\n" +
+            "class TestNinethJUnit {\n\n" +
+            "}", { encoding: "utf-8" });
+        test.appendTestToFile();
+        const shouldBe = "package mypackage;\n" +
+            "import org.junit.*;\n\n" +
+            "class TestNinethJUnit {\n\n" +
+            "\t@Test\n" +
+            "\tvoid tenthTest() {\n" +
+            "\t\t// TODO\n" +
+            "\t}\n\n" +
+            "}";
+
+        assert.strictEqual(readFileSync(filename, "utf-8"), shouldBe);
+    });
+
+    test("Shouldn't import when an import contains JUnit", () => {
+        const filename = join(testDir, "TestEleventhJUnit.java");
+        let test = new Test("thirdTest", filename, new JUnitLibrary(new JavaHandler()), "TestEleventhJUnit");
+        writeFileSync(filename,
+            "import org.java.junit.*;\n\n" +
+            "class TestEleventhJUnit {\n\n" +
+            "\t@Test\n" +
+            "\tvoid firstTest() {\n" +
+            "\t\t// TODO\n" +
+            "\t}\n\n" +
+            "}", { encoding: "utf-8" });
+        test.appendTestToFile();
+        const shouldBe = "import org.java.junit.*;\n\n" +
+            "class TestEleventhJUnit {\n\n" +
             "\t@Test\n" +
             "\tvoid firstTest() {\n" +
             "\t\t// TODO\n" +
@@ -106,7 +176,7 @@ suite("Testing TestList class for Jest test suit", () => {
         testList.addTestsToFile();
 
         const shouldBe =
-            "import org.junit.jupiter.api.Test;\n\n" +
+            "import org.junit.*;\n\n" +
             "class TestFifthJUnit {\n\n" +
             "\t@Test\n" +
             "\tvoid test() {\n" +
@@ -128,7 +198,7 @@ suite("Testing TestList class for Jest test suit", () => {
         testList.addTestsToFile();
 
         const shouldBe =
-            "import org.junit.jupiter.api.Test;\n\n" +
+            "import org.junit.*;\n\n" +
             "class TestSixthJUnit {\n\n" +
             "\t@Test\n" +
             "\tvoid test1() {\n" +

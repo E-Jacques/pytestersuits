@@ -11,6 +11,8 @@ VSCode extension to make testing much more simple and intuitive.
 You can add some tests to your python files. They will be automatically marked as todo.
 Select a file and a name to create this test.
 
+<img src="rsc/gif/add_test.gif">
+
 ### Coverage report UI
 You can vizualise your tests coverage reports inside Vscode. <br>
 You can also directly open the untested lines by click on the button taht appear when hovering the item inside the side menu.
